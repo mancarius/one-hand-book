@@ -1,0 +1,21 @@
+.nav {
+    margin: {
+        left: auto;
+    }
+
+    a {
+        color: inherit;
+    }
+}
+
+.items {
+    display: flex;
+}
+
+.item {
+    a {
+        padding:.5em;
+        font-size: 1.1em;
+        display: flex;
+    }
+}

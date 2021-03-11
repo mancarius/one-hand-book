@@ -1,0 +1,14 @@
+.footer {
+  margin-top: auto;
+  margin-bottom: 0;
+  padding: 1em .5em;
+  border-color: #eee;
+  border-width: 1px;
+  border-top-style: solid;
+  background-color: #eee;
+}
+
+.logo {
+  font-size: 1em;
+}
+/*# sourceMappingURL=index.module.css.map */

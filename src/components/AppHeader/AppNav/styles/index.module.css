@@ -1,0 +1,22 @@
+.nav {
+  margin-left: auto;
+}
+
+.nav a {
+  color: inherit;
+}
+
+.items {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.item a {
+  padding: .5em;
+  font-size: 1.1em;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+/*# sourceMappingURL=index.module.css.map */
