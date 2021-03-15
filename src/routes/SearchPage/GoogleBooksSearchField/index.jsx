@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
@@ -24,6 +24,7 @@ export default function GoogleBooksSearchField() {
     const [inputValue, setInputValue] = React.useState('');
     const [options, setOptions] = React.useState([]);
     const loaded = React.useRef(false);
+    const field = useRef(null);
 
     if (typeof window !== 'undefined' && !loaded.current) {
         loaded.current = true;
@@ -36,6 +37,10 @@ export default function GoogleBooksSearchField() {
         }, 200),
         [],
     );
+
+    React.useEffect(() => {
+        field.current.querySelector('input').focus();
+    }, [])
 
     React.useEffect(() => {
         let active = true;
@@ -83,6 +88,7 @@ export default function GoogleBooksSearchField() {
             autoComplete
             includeInputInList
             filterSelectedOptions
+            ref={field}
             value={value}
             onChange={(event, newValue) => {
                 setOptions(newValue ? [newValue, ...options] : options);

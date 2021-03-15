@@ -1,0 +1,26 @@
+.container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--main-bg-color-ligth);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo {
+    animation: bounce 2s infinite alternate;
+    transition: transform 1s ease;
+}
+
+@keyframes bounce {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(1.2);
+    }
+}

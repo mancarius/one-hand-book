@@ -1,0 +1,25 @@
+.container {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    margin: 0 .5rem;
+    flex:1;
+    background-image: url(../../../assets/2975207.webp);
+    background-position-x: right;
+    background-position-y: bottom;
+    background-size: 50%;
+    background-repeat: no-repeat;
+}
+
+.title {
+    margin: 0 1rem 3rem;
+    line-height: 1.5em;
+    font-size: 2.5em;
+    opacity: .8;
+}
+
+.button {
+    border-radius: 2em;
+    padding: 1rem 2rem;
+    background-color: #ffffa5;
+}

@@ -1,0 +1,12 @@
+.grid {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (minmax(130px, 1fr))[auto-fill];
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: .5rem;
+}
+
+.grid > * {
+  height: 12rem;
+}
+/*# sourceMappingURL=index.module.css.map */

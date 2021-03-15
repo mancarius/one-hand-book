@@ -4,4 +4,8 @@ function AppLogo() {
     return <><PanToolTwoTone/> Book</>
 }
 
+AppLogo.Icon = () => {
+    return <PanToolTwoTone />;
+}
+
 export default AppLogo

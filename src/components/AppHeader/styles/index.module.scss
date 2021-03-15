@@ -4,12 +4,15 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    background-color: khaki;
+    background-color: var(--main-bg-color);
+    margin-bottom: 2rem;
 }
 
-.h1 {
-    font-size: 1.2em;
+.logo {
+    font-size: 1.5em;
     font-weight: bold;
     display: flex;
     align-items: center;
+    padding: .5em;
+    text-transform: capitalize;
 }

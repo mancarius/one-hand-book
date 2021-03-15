@@ -1,4 +1,9 @@
+@import 'globals';
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200&display=swap');
+
+:root {
+    --main-bg-color: #{$background-color-ligth};
+}
 
 * {
     box-sizing: border-box;
@@ -10,6 +15,7 @@ html {
     font-family: Montserrat, sans-serif;
     padding: 0;
     margin: 0;
+    background-color: var(--main-bg-color);
 }
 
 body {

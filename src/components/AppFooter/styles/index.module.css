@@ -6,6 +6,7 @@
   border-width: 1px;
   border-top-style: solid;
   background-color: #eee;
+  display: none;
 }
 
 .logo {
