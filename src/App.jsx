@@ -32,7 +32,7 @@ function App() {
                 <Route exact path="/" component={HomePage} />
                 <Route exact path="/auth" component={Auth} />
                 <Route path="/search" component={SearchPage} />
-                <Route path="/book" component={Book} />
+                <Route path="/book/:volumeID/" component={Book} />
                 <PrivateRoute
                   path="/bookshelf/:bookshelfID"
                   component={Bookshelf}

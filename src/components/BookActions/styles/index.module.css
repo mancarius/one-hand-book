@@ -34,7 +34,7 @@
   outline: none;
 }
 
-.actions button:active, .actions button:focus, .actions button:hover {
+.actions button:focus, .actions button:hover {
   color: initial;
 }
 

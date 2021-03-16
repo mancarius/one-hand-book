@@ -1,13 +1,23 @@
+.btnBack {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 10;
+    margin: .5rem;
+}
+
 .cover {
     position: sticky;
     top: 0;
     z-index: 1;
+    transition: all 400ms ease;
+    height: auto;
+    min-height: 80vh;
 
     margin: -.5rem {
         bottom: 0;
     }
 }
-
 
 
 .info {

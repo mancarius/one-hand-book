@@ -1,55 +1,122 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable import/no-anonymous-default-export */
-import React, { useState, createContext } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useParams, useHistory } from 'react-router-dom' 
+import { useDispatch, useSelector } from "react-redux";
+import { useSnackbar } from 'notistack';
 import { Rating } from '@material-ui/lab'
+import parseHTML from 'html-react-parser'
+import GoogleBooks from '../../helpers/googleBooksApi'
 import BookContextProvider from '../../components/BookContextProvider'
 import BookActions from '../../components/BookActions'
+import CancelRoundedIcon from '@material-ui/icons/CancelRounded';
+import ButtonBack from '../../components/ButtonGoBack'
 import styles from './styles/index.module.css';
 
-export default React.memo(function () {
+
+export default React.memo(props => {
+    const { volumeID } = useParams();
+    const { enqueueSnackbar } = useSnackbar();
+    const history = useHistory();
+    const user = useSelector(state => state.user);
     const [expandSynopsis, setExpandSynopsis] = useState(false);
-    
+    const [favorite, setFavorite] = useState(false);
+    const [readLater, setReadLater] = useState(false);
+    const [volume, setVolume] = useState({});
+    const [image, setImage] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    const toggleAction = (type) => {
+        if ('token' in user) {
+            if(type === 'favorite')
+                setFavorite(prev => !prev);
+            else if (type === 'toRead')
+                setReadLater(prev => !prev);
+        }
+        else
+        {
+            enqueueSnackbar('Sign in to add this book to your favorites');
+        }
+    }
 
     const toggleSynopsis = () => {
         setExpandSynopsis(prev => !prev);
     }
+    
+    useEffect(() => {
+        // if not receive a valid volumeID
+        (volumeID === 'undefined' || volumeID.lenght === 0) && history.push('/');
+        // else
+        GoogleBooks.getVolume(volumeID)
+            .catch(error => {
+                
+            })
+            .then(res => {
+                console.log(res);
+                setVolume({ ...res.volumeInfo, sale: res.saleInfo });
+            });
+        // cancel pending request on component unmount
+        return () => GoogleBooks.abort();
+    }, []);
+
+    useEffect(() => {
+        let img = volume?.imageLinks?.large
+            ?? volume?.imageLinks?.medium
+            ?? volume?.imageLinks?.small
+            ?? volume?.imageLinks?.thumbnail
+            ?? '';
+        if (img !== '') {
+            setImage(img);
+        }
+
+        setFavorite(volume.isFavorite);
+        setReadLater(volume.toRead);
+    }, [volume]);
 
     
-    return <BookContextProvider>
-        <img className={styles.cover} src="https://books.google.it/books/content?id=XThFnQEACAAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72xSCdRcwa_Pv2metsuUpfpMnkwLFL_fH42tMaQTmt1V51aewH22AqEkETytMitWx0CT8KdLWUqLWn5GzIgeyc8VI-OvfNiDID0udxA-ZJ_ijYEGCXCMnSWItL207Wk1bWVU55S" alt="Frontcover" />
-        <div className={styles.info}>
-            <h1 className={styles.title}>{'Titolo'}</h1>
-            <h3 className={styles.author}>{'Author'}</h3>
-            <div className={styles.publishing}><div className={styles.publisher}>{'Random House Digital, Inc.'}</div><div className={styles['published-date']}>(2005)</div></div>
-            <div className={styles.review}>
-                <Rating name="read-only" value={4.5} precision={0.5} readOnly size='small' />
-                <span> (<span className="count">13</span> reviews)</span>
+    return (<>
+        <ButtonBack classes={styles.btnBack} title='Go back'><CancelRoundedIcon style={{color: 'inherit', textShadow: 'inherit'}}/></ButtonBack>
+        {/* work around per image load event */}
+        <img style={{display: 'none'}} src={image} onLoad={() => setLoading(false)} />
+        <BookContextProvider
+            volume={volume}
+            favorite={favorite}
+            toggleAction={toggleAction}
+            readLater={readLater}
+            loading={loading}
+        >
+            <img className={ styles.cover } src={image} alt="Frontcover" />
+            <div className={styles.info}>
+                <h1 className={styles.title}>{volume?.title}</h1>
+                <h3 className={styles.author}>{volume?.authors?.join(', ')}</h3>
+                <div className={styles.publishing}><div className={styles.publisher}>{volume?.publisher}</div><div className={styles['published-date']}>({volume?.publishedDate?.split('-')[0]})</div></div>
+                <div className={styles.review}>
+                    <Rating name="read-only" value={volume?.averageRating ?? 0} precision={0.5} readOnly size='small' />
+                    <span> (<span className="count">{volume?.ratingsCount}</span> reviews)</span>
+                </div>
+                <BookActions style={{margin: '2rem 0'}} />
+                <div className={styles.synopsis}>
+                    <p className={styles['synopsis-window']} style={expandSynopsis ? { maxHeight: '1000vh' } : {}}>{ parseHTML(volume?.description ?? '')}</p>
+                    <button onClick={toggleSynopsis}>{expandSynopsis ? 'Less...' : 'More...'}</button>
+                </div>
             </div>
-            <BookActions />
-            <div className={styles.synopsis}>
-                <p className={styles['synopsis-window']} style={expandSynopsis ? { maxHeight: '100vh' } : {}}>Una nuova edizione dello Hobbit di J.R.R. Tolkien, illustrata da Jemima Catlin. Il volume contiene il testo integrale del romanzo e centinaia di immagini a colori. Bilbo Baggins conduce una vita tranquilla e confortevole, viaggia di rado e non si allontana mai troppo dalla dispensa del suo buco-hobbit. La sua pace viene presto interrotta quando Gandalf lo stregone e una compagnia di tredici nani bussano alla sua porta e lo coinvolgono in un'avventura alla ricerca del tesoro custodito da Smaug il Terribile, un enorme, pericoloso drago...</p>
-                <button onClick={toggleSynopsis}>{expandSynopsis ? 'Less...' : 'More...'}</button>
+            <div className={styles.bibliography}>
+                <h2>Bibliography</h2>
+                <dl>
+                    <dt>Title</dt>
+                    <dd>{ volume?.title }</dd>
+                    <dt>Genre</dt>
+                    <dd>{ volume?.mainCategory ?? volume?.categories?.join() ?? 'General' }</dd>
+                    <dt>Authors</dt>
+                    <dd>{ volume?.authors?.join(', ') }</dd>
+                    <dt>Publisher</dt>
+                    <dd>{volume?.publisher}, { volume?.publishedDate?.split('-')[0] }</dd>
+                    <dt>ISBN</dt>
+                    <dd>{ volume?.industryIdentifiers?.map(i => i.identifier).join(', ') }</dd>
+                    <dt>Lenght</dt>
+                    <dd>{ volume?.pageCount } pages</dd>
+                </dl>
             </div>
-        </div>
-        <div className={styles.bibliography}>
-            <h2>Bibliography</h2>
-            <dl>
-                <dt>Title</dt>
-                <dd>Lo Hobbit. Un viaggio inaspettato. Ediz. illustrata</dd>
-                <dt>Genre</dt>
-                <dd>Narrativa straniera</dd>
-                <dt>Author</dt>
-                <dd>John Ronald Reuel Tolkien</dd>
-                <dt>Translators</dt>
-                <dd>C. Ciuferri, P. Paron</dd>
-                <dt>Illustrator</dt>
-                <dd>Jemina Catlin</dd>
-                <dt>Publisher</dt>
-                <dd>Bompiani, 2013</dd>
-                <dt>ISBN</dt>
-                <dd>8845274403, 9788845274404</dd>
-                <dt>Lenght</dt>
-                <dd>374 pages</dd>
-            </dl>
-        </div>
-    </BookContextProvider>;
+        </BookContextProvider>
+    </>);
 });

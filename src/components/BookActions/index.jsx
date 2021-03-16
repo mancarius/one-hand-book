@@ -7,11 +7,11 @@ import BookmarkRoundedIcon from '@material-ui/icons/BookmarkRounded';
 import { BookContext } from '../../components/BookContextProvider'
 import styles from './styles/index.module.css';
 
-export default React.memo(function (props) {
-    const { favorite, toggleFavorite, readLater, toggleReadLater } = useContext(BookContext);
+export default React.memo(function ({style, ...props}) {
+    const { favorite, toggleAction, readLater } = useContext(BookContext);
 
-    return <div className={styles.actions}>
-        <button onClick={toggleFavorite}>
+    return <div className={styles.actions} style={style} >
+        <button onClick={() => toggleAction('favorite')}>
             {
                 favorite ?
                     <><FavoriteRounded />In my Favorites</>
@@ -19,7 +19,7 @@ export default React.memo(function (props) {
                     <><FavoriteBorderRoundedIcon />Add to Favorites</>
             }
         </button>
-        <button onClick={toggleReadLater}>
+        <button onClick={() => toggleAction('toRead')}>
             {
                 readLater ?
                     <><BookmarkRoundedIcon />Saved</>

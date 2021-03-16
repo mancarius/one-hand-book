@@ -1,54 +1,22 @@
+.btnBack {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  margin: .5rem;
+}
+
 .cover {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 1;
+  -webkit-transition: all 400ms ease;
+  transition: all 400ms ease;
+  height: auto;
+  min-height: 80vh;
   margin: -0.5rem;
   margin-bottom: 0;
-}
-
-.actions {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-pack: distribute;
-      justify-content: space-around;
-  background-color: #fbfbfb;
-  border-radius: 3rem;
-  font-size: small;
-  color: #777;
-}
-
-.actions button {
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-  background: none;
-  border: none;
-  border-radius: 50%;
-  font-size: inherit;
-  color: inherit;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-flow: column;
-          flex-flow: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  padding: .5rem;
-  cursor: pointer;
-  outline: none;
-}
-
-.actions button:active, .actions button:focus, .actions button:hover {
-  color: initial;
-}
-
-.actions button svg {
-  margin-bottom: .25rem;
 }
 
 .info {

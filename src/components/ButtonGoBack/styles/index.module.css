@@ -1,0 +1,20 @@
+.btn {
+  font-size: 25pt;
+  height: 23pt;
+  width: 23pt;
+  border: none;
+  background: none;
+  border-radius: 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: #00000069;
+  color: #fff;
+}
+/*# sourceMappingURL=index.module.css.map */

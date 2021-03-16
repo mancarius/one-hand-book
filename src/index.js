@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import store from "./redux/store";
 import { Provider } from "react-redux";
+import { SnackbarProvider } from 'notistack';
+import Collapse from '@material-ui/core/Collapse';
 import './styles/index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -9,11 +11,16 @@ import reportWebVitals from './reportWebVitals';
 
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
+  <Provider store={store}>
+    <SnackbarProvider maxSnack={3} dense={false} hideIconVariant preventDuplicate anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+      }}
+      TransitionComponent={Collapse}
+    >
       <App />
-    </Provider>
-  </React.StrictMode>,
+    </SnackbarProvider>
+  </Provider>,
   document.getElementById('root')
 );
 

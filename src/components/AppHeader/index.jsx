@@ -8,7 +8,6 @@ function AppHeader() {
     const location = useLocation();
     const path = location.pathname.split('/');
     const pathname = [...path].pop();
-    console.log(path)
 
     return <>
         {

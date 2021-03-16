@@ -14,7 +14,6 @@
             radius: 50%;
         }
 
-        ;
         font-size: inherit;
         color: inherit;
         display: flex;
@@ -24,7 +23,6 @@
         cursor: pointer;
         outline: none;
 
-        &:active,
         &:focus,
         &:hover {
             color: initial;
