@@ -1,0 +1,51 @@
+@import '../../../styles/globals';
+
+.bookshelves_container {
+    position: relative;
+    background-color: var(--lightgray);
+
+    @media only screen and (max-width: $media-query-sx) {
+        margin: 1rem -.5rem;
+    }
+
+    @media only screen and (min-width: $media-query-sx) {
+        margin: 1rem;
+    }
+
+    padding: 1rem;
+    border-top-left-radius: 2rem;
+    border-top-right-radius: 2rem;
+    box-shadow: 0px 0px 5px -2px #33333382;
+    display: flex;
+    flex-flow: column;
+}
+
+.main_carousel {
+    margin: 2rem -.5rem 4rem;
+
+    .carousel_title {
+        margin: {
+            left: 1.5rem;
+            right: 1.5rem;
+        }
+    }
+}
+
+.carousel_container {
+    position: relative;
+    margin-bottom: 2rem;
+
+    img {
+        max-height: 8rem;
+    }
+}
+
+.shelves_button {
+    background-color: var(--button-success-bg) !important;
+    margin: 0 auto !important;
+}
+
+.logo_container{
+    margin: 6vw;
+    font-size: 2rem;
+}

@@ -1,31 +1,87 @@
+@import '../../../styles/globals';
+
 .btnBack {
     position: fixed;
     top: 0;
-    right: 0;
+    left: 0;
     z-index: 10;
     margin: .5rem;
 }
 
-.cover {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    transition: all 400ms ease;
-    height: auto;
-    min-height: 80vh;
+.book_container {
+    margin-bottom: 2rem;
 
-    margin: -.5rem {
-        bottom: 0;
+    @media only screen and (max-width: $media-query-sx) {
+        flex: inherit;
+        display: inherit;
+        flex-flow: inherit;
     }
+
+    @media only screen and (min-width: $media-query-md) {
+        grid-template-areas:
+            'userActions userActions'
+            'cover info'
+            'cover actions'
+            'synopsis synopsis'
+            'bibliography bibliography'
+            'exploreAuthor exploreAuthor' !important;
+    }
+
+    @media only screen and (min-width: $media-query-sx) {
+        display: grid;
+        gap: 2rem;
+        grid-template-areas:
+            'userActions userActions'
+            'cover info'
+            'actions actions'
+            'synopsis synopsis'
+            'bibliography bibliography'
+            'exploreAuthor exploreAuthor';
+        grid-template-columns: auto 1fr;
+    }
+
+    &>* {
+        background-color: var(--main-bg-color);
+        z-index: 1;
+    }
+}
+
+.cover {
+    grid-area: cover;
+    width: 100%;
+
+    @media only screen and (max-width: $media-query-sx) {
+        z-index: 0;
+        height: auto;
+        border-radius: .5rem;
+        max-width: 12rem;
+        transition-delay: 400ms;
+        margin: 0 auto;
+
+        &.zoom{
+            max-width: 100%;
+        }
+    }
+
+    @media only screen and (min-width: $media-query-sx) {
+        max-width: 128px;
+    }
+
+    transition: all 1s ease;
+    /* margin: -0.5rem; */
+    margin-bottom: 0;
 }
 
 
 .info {
+    grid-area: info;
     position: relative;
     z-index: 2;
-    background-color: var(--main-bg-color);
-    margin: 0 -.5rem;
-    padding: 1rem;
+
+    @media only screen and (max-width: $media-query-sx) {
+        margin: 0 -.5rem;
+        padding: 1rem;
+    }
 
     &>div {
         margin: .75em 0;
@@ -33,11 +89,18 @@
 }
 
 .title {
+    @media only screen and (max-width: $media-query-sx) {
+        margin-top: .8rem;
+    }
+
     margin-bottom: 1rem;
+    font-size: 1.5em;
+    font-weight: normal;
 }
 
 .author {
     font-weight: normal;
+    font-size: 1.1em;
 }
 
 .publishing {
@@ -54,6 +117,22 @@
     white-space: nowrap;
 }
 
+.card {
+    padding: 2rem 1rem;
+    margin-bottom: 1rem;
+    //border-top: 1px solid #aaa;
+
+    @media only screen and (min-width: $media-query-sx) {
+        padding: 1rem;
+    }
+
+    h2 {
+        font-size: 1.25em;
+        font-weight: normal;
+        margin-bottom: 2rem;
+    }
+}
+
 .review {
     display: flex;
     align-items: center;
@@ -63,62 +142,121 @@
     }
 }
 
-.synopsis {
-    &>button {
-        cursor: pointer;
+.userActionsContainer {
+    grid-area: userActions;
+    background-color: var(--main-bg-color);
+    display: flex;
+
+    @media only screen and (max-width: $media-query-sx) {
+        position: fixed;
+        justify-content: space-evenly;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 50;
+    }
+
+    @media only screen and (min-width: $media-query-sx) {
+        border-radius: 50vw;
+        background-color: var(--lightgray);
+    }
+
+    button {
         border: none;
         background: none;
-        font-size: inherit;
+        padding: .5rem;
+        font-size: 1.5rem;
+        display: inline-flex;
+
+        @media only screen and (min-width: $media-query-sx) {
+            &:first-of-type {
+                margin-right: auto;
+            }
+        }
+    }
+}
+
+.actionsContainer {
+    grid-area: actions;
+    display: flex;
+
+    @media only screen and (max-width: $media-query-sx) {
+        justify-content: space-evenly;
+        margin: 0 -.5rem;
+        padding: 1rem 0 2rem;
+    }
+
+    @media only screen and (min-width: $media-query-sx) {
+        button+button {
+            margin-left: 2rem;
+        }
+    }
+}
+
+.synopsis {
+    grid-area: synopsis;
+
+    .buttonContainer {
         display: block;
         width: 100%;
         text-align: center;
-        padding: 1rem;
-        text-transform: uppercase;
-        background-color: rgb(255, 242, 168);
-        color: #696969;
-        font-weight: bold;
-        border-radius: 3rem;
-        outline: none;
-
-        &:hover,
-        &:focus {
-            //text-decoration: underline;
+        padding-top: 2rem;
+        background: linear-gradient(0deg, var(--main-bg-color) 50%, transparent 100%);
+        position: sticky;
+        @media only screen and (min-width: $media-query-sx) {
+            bottom: 0;
         }
+        @media only screen and (max-width: $media-query-sx) {
+            bottom: 2.5rem;
+        }
+        z-index: 2;
+        margin-top: -2.5rem;
     }
 }
 
 .synopsis-window {
     overflow: hidden;
-    max-height: 5em;
+    max-height: 6em;
     text-overflow: ellipsis;
     transition: 400ms ease;
-    margin-top: 0;
+    margin: 0;
+    line-height: 1.5em;
 }
 
 .bibliography {
-    background-color: var(--main-bg-color);
-    padding-top: 2rem;
+    grid-area: bibliography;
     z-index: 2;
-    padding: 1rem;
-    margin: 0 -.5rem;
-
-    h2 {
-        font-size: 1.2em;
-    }
 
     dl {
-        display: grid;
-        grid-template-columns: 1fr auto;
+        @media only screen and (min-width: $media-query-sx) {
+            display: grid;
+            grid-template-columns: auto 1fr;
+        }
 
-        dt, dd {
+        dt,
+        dd {
             margin: 0;
-            margin-top: .75rem;
+
+            @media only screen and (min-width: $media-query-sx) {
+                margin-top: 1rem;
+            }
         }
 
         dt {
-            margin-right: .75rem;
+            margin-right: 2rem;
             white-space: nowrap;
             font-weight: bold;
+
+            @media only screen and (max-width: $media-query-sx) {
+                margin-top: 1rem;
+                margin-bottom: .5rem;
+            }
         }
     }
+}
+
+.explore {
+    grid-area: exploreAuthor;
+    background-color: var(--lightgray);
+    margin: 0;
 }

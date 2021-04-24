@@ -1,0 +1,16 @@
+.container {
+    flex: 1;
+    display:flex;
+    flex-flow: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.title {
+    font-size: 2em;
+    color: #c3c3c3;
+}
+
+.image {
+    max-width:80vmin;
+}

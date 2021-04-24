@@ -7,18 +7,29 @@ import Collapse from '@material-ui/core/Collapse';
 import './styles/index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { ThemeProvider } from '@material-ui/core/styles';
+import theme from './helpers/muiTheme'
+import { SnackbarUtilsConfigurator } from './helpers/SnackBarUtils';
 
 
 
 ReactDOM.render(
   <Provider store={store}>
-    <SnackbarProvider maxSnack={3} dense={false} hideIconVariant preventDuplicate anchorOrigin={{
+    <SnackbarProvider
+      maxSnack={3}
+      dense
+      hideIconVariant
+      preventDuplicate
+      anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',
       }}
       TransitionComponent={Collapse}
-    >
-      <App />
+    > 
+      <ThemeProvider theme={theme}>
+        <SnackbarUtilsConfigurator />
+        <App />
+      </ThemeProvider>
     </SnackbarProvider>
   </Provider>,
   document.getElementById('root')
@@ -27,4 +38,4 @@ ReactDOM.render(
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+reportWebVitals(console.log);

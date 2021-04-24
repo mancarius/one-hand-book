@@ -1,21 +1,67 @@
+/* eslint-disable no-throw-literal */
 /* eslint-disable import/no-anonymous-default-export */
 import axios from 'axios'
+import getCountryCode from './getCountryCode'
+
+const CancelToken = axios.CancelToken;
+const source = CancelToken.source();
 
 export default {
     apiKey: process.env.REACT_APP_GOOGLE_BOOKS_APIKEY,
+
     baseUrl: 'https://www.googleapis.com/books/v1',
-    cancelTokenSource: axios.CancelToken.source(),
+
+    fields: {
+        title: 'intitle',
+        author: 'inauthor',
+        publisher: 'inpublisher',
+        subject: 'subject',
+        isbn: 'isbn'
+    },
+
+    cache: new Map(),
+    
+    countryCode: getCountryCode(),
+
+    _userAccessToken: null,
+
+
+
+
+
+
+
+
     /**
      * Abort the api call
      */
     abort() {
-        this.cancelTokenSource.cancel();
+        source.cancel()
     },
+
+
+
+
+
+
+
+
     // Errors
-    _AuthorizationError(mes) {
-        this.name = 'AuthorizationError';
-        this.message = mes;
-    },
+    _AuthorizationError: (() => {
+        return class extends Error {
+            constructor(mess) {
+                super(mess);
+                this.name = 'UNAUTHENTICATED';
+            }
+        }
+    })(),
+
+
+
+
+
+
+
 
     /**
      * @private
@@ -27,33 +73,83 @@ export default {
         return str.matches("^[a-zA-Z0-9]+$") && (length > 0 ? str.length === length : true);
     },
 
+
+
+
+
+    
+
     /**
-     * Return the oauth token for user autentication stored in localStorage (user.token).
+     * save the user token to access google api
+     * 
+     * @private
+     * @param {String | Function} token 
+     */
+    setUserAccessToken(token = null) {
+        this._userAccessToken = token;
+    },
+
+
+
+
+    /**
+     * Return the oauth token for user autentication.
      * If not exist return 'null'.
      * 
      * @private
-     * @param {String} token 
+     * @return {String}
      */
     _getOAuthToken() {
-        try {
-            let user = JSON.parse(localStorage.getItem('user'));
-            return user?.token ?? null;
+        if (typeof this._userAccessToken === 'string') {
+            return this._userAccessToken;
+        } else if (typeof callback === "function") {
+            return this._userAccessToken();
+        } else {
+            // return default
+            try {
+                let user = JSON.parse(localStorage.getItem('user'));
+                return user?.token ?? null;
+            } catch (error) {
+                return null
+            }
         }
-        catch (error) { return null }
     },
+
+
+
+
+
+
+
+
+
 
     /**
      * Return the HTTP headers for axios request.
      * 
      * @private
+     * @param {Boolean} needAuth
      * @returns {Object}
      */
-    _getHeaders() {
-        let headers = {'Content-Type': 'application/json'};
+    _getHeaders(needAuth=false) {
+        let headers = {
+            'Content-Type': 'application/json',
+        };
         const token = this._getOAuthToken();
-        if(token) headers.Authorization = token;
+        if (token && needAuth) headers.Authorization = 'Bearer ' + token;
         return headers;
     },
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * HTTP request errors handler. Optionally accepts a custom handler
@@ -70,9 +166,8 @@ export default {
         // else continue with default handle
         if (error.response) {
             // Request made and server responded
-            if( error.response.status === 401)
-                throw this._AuthorizationError(error.response.data.error.message);
-            
+            if (error.response.status === 401)
+                throw new this._AuthorizationError(error.response.data.error.message);
         } else if (error.request) {
             // The request was made but no response was received
             console.warn(error.request);
@@ -82,6 +177,16 @@ export default {
         }
     },
 
+
+
+
+
+
+
+
+
+
+
     /**
      * Perform a request with received params
      * 
@@ -90,20 +195,49 @@ export default {
      * @param {Object} headers 
      * @returns 
      */
-    async _httpRequest(url, headers, method = 'get') {
+    async _httpRequest(url, headers, method = 'get', caching = true) {
         let init = {
             headers,
-            cancelToken: this.cancelTokenSource.token
+            cancelToken: source.token
         };
+
+        const params = { method, url, ...init };
+        const cacheKey = JSON.stringify(params);
+        const cacheValue = this.cache.has(cacheKey) ? this.cache.get(cacheKey) : null;
+
         try {
-            const res = await axios[method](url, init);
-            return { ...res.data, status: res.status };
+            // if exist in cache
+            if (cacheValue) return Promise.resolve(JSON.parse(cacheValue));
+            // else
+            // perform api call
+            const res = await axios({ method, url, ...init });
+            // customize object
+            const customRes = {
+                ...res.data,
+                status: res.status
+            };
+            // caching result
+            caching && this.cache.set(cacheKey, JSON.stringify(customRes));
+            // return result
+            return customRes;
         } catch (error) {
-            if (error.name === 'SyntaxError')
+            if (axios.isCancel(error))
+                throw new Error(`Request canceled ${error.message ?? ''}`);
+            else if (error.name === 'SyntaxError')
                 console.warn(error)
             else throw error
         }
     },
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Perform a POST request with received params
@@ -112,24 +246,44 @@ export default {
      * @param {String} query 
      * @param {String} requiredFields 
      * @param {Boolean} authorization
+     * @param {Boolean} caching Enable/Disable caching for this call
      * @returns 
      */
-    async _httpGetRequest(query, requiredFields = null, authorization = false) {
+    async _httpGetRequest(query, requiredFields = null, authorization = false, caching = true) {
         // if query not contains '?' append it to the end
         if (!query.includes('?')) query += '?';
         // then
-        let fullUrl = `${this.baseUrl}/${query}key=${this.apiKey}`;
+        let country = '';
+        try {
+            country = await this.countryCode();
+        } catch (err) {
+            console.warn(err);
+            country = navigator.language || navigator.userLanguage;
+            country = country.split('-').pop();
+        }
+        let fullUrl = `${this.baseUrl}/${query}&key=${this.apiKey}&country=${country}`;
         fullUrl += requiredFields ? `&fields=${requiredFields}` : ``;
-        const headers = this._getHeaders();
+        const headers = this._getHeaders(authorization);
         // if not a valid token
-        if (!headers.Authorization && authorization) throw new Error("Need autentication to access to private library");
+        if (!headers.Authorization && authorization) throw new this._AuthorizationError('Need authentication to access your library');
         // else
         try {
-            return await this._httpRequest(fullUrl, headers, 'get');
+            return this._httpRequest(fullUrl, headers, 'get', caching);
         } catch (error) {
             this._httpRequestErrorsHandler(error);
         }
     },
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Perform a POST request with received query
@@ -138,21 +292,31 @@ export default {
      * @param {String} query 
      * @returns 
      */
-    async _httpPostRequest(query) {
+    async _httpPostRequest(query, authentication=true) {
         // if query not contains '?' append it to the end
         if (!query.includes('?')) query += '?';
         // then
-        const fullUrl = `${this.baseUrl}/${query}key=${this.apiKey}`;
-        const headers = this._getHeaders();
+        const fullUrl = `${this.baseUrl}/${query}&key=${this.apiKey}`;
+        const headers = this._getHeaders(authentication);
         // if not a valid token
-        if (!headers.Authorization) throw new Error("Need autentication to access to private library");
+        if (!headers.Authorization) throw new this._AuthorizationError('Need authentication to access your library');
         // else
         try {
-            return await this._httpRequest(fullUrl, headers, 'post');
+            return this._httpRequest(fullUrl, headers, 'post', false);
         } catch (error) {
             this._httpRequestErrorsHandler(error);
         }
     },
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Return the volume data
@@ -161,29 +325,36 @@ export default {
      * @returns {Object}
      */
     async getVolume(volumeId) {
-        const requiredFields = 'volumeInfo(title,authors,publisher,publishedDate,description,pageCount,printType,mainCategory,categories,industryIdentifiers/identifier,averageRating,ratingsCount,imageLinks,language),saleInfo';
+        const requiredFields = 'id,volumeInfo(title,authors,publisher,publishedDate,description,pageCount,printType,mainCategory,categories,industryIdentifiers/identifier,averageRating,ratingsCount,imageLinks,language),saleInfo,userInfo(isInMyBooks,isPurchased),accessInfo(accessViewStatus,epub/isAvailable,epub/downloadLink,pdf/isAvailable,pdf/downloadLink,webReaderLink)';
         const path = `volumes/${encodeURI(volumeId)}`;
         try {
-            const _volume = this._httpGetRequest(path, requiredFields);
-            const _isFavourite = this._isVolumeInBookshelf(volumeId, 0);
-            const _isToRead = this._isVolumeInBookshelf(volumeId, 2);
-            return Promise.allSettled([_volume, _isFavourite, _isToRead])
-                .then(([volume, isFavorite, isToRead]) => {
+            const get_volume = this._httpGetRequest(path, requiredFields);
+            return Promise.allSettled([get_volume])
+                .then(([volume]) => {
                     if (volume.status === 'fulfilled') {
-                        volume.value.isFavorite = isFavorite.status === 'fulfilled' ? isFavorite.value : false;
-                        volume.value.isToRead = isToRead.status === 'fulfilled' ? isToRead.value : false;
                         return volume.value;
-                    }
-                    else throw new Error("Request failed");
+                    } else {
+                        throw volume.reason;
+                    } 
                 })
                 .catch(err => {
-                    if (err instanceof this._AuthorizationError) { }
-                    else throw err;
+                    console.log(err);
+                    throw err;
                 });
         } catch (error) {
             throw error;
         }
     },
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Returns query results as an array of objects
@@ -191,27 +362,134 @@ export default {
      * @param {Object} param0
      * @returns {Array}
      */
-    async searchVolumes({ ...args }) {
-        let { query, fields, params } = args;
-        // add fields to query
-        for (let field in fields) {
-            query += ' ' + field + ':' + fields[field];
-        }
+    async search({ ...args }) {
+        let { query, params, fields, startIndex = 0, maxResults = 10 } = args;
         // create params array
-        let _params = [];
+        let _params = [`startIndex=${startIndex}`, `maxResults=${maxResults}`];
         for (let param in params) {
             _params.push(`${param}=${params[param]}`);
         }
-        
-        const requiredFields = 'id,volumeInfo(title,authors,imageLinks)';
-        const path = `volumes?q=${encodeURI(query)}&${_params.join('&')}`;
+
+        const requiredFields = `items(id,volumeInfo(${fields || 'title,authors,imageLinks,description,averageRating'}),saleInfo)`;
+        const path = `volumes?q=${encodeURI(query)}&${_params.join('&')}&`;
 
         try {
-            return await this._httpGetRequest(path, requiredFields);
+            return this._httpGetRequest(path, requiredFields);
         } catch (error) {
             throw error;
         }
     },
+
+
+
+
+
+
+
+
+
+
+    /**
+     * 
+     * @param {String} query The keyword
+     * @param {String} field Where to look for keyword. Can receive a list of field separed by comma (title, author, ecc...)
+     * @param {Number} maxResults Max number of results to return
+     * @returns 
+     */
+    async autocomplete(query, {
+        fields = null,
+        maxResults = 40
+    }) {
+        const params = {
+            maxResults
+        };
+        query = query.toLowerCase();
+        // if field is not null
+        fields = fields ? fields.split(',') : [];
+        // return a string like: query field:query field:query...
+        query = query + fields.map(field => this.fields[field] ? this.fields[field] + ':' + query : '').join(' ');
+        // build string of required fields in results search
+        fields = 'title,authors,publisher,industryIdentifiers/identifier,mainCategory,categories';
+        //
+        const matchSearch = function searchIn(query, value) {
+            let matchStart = -1;
+            let matched_substring = [];
+
+            if (typeof value === 'string') {
+                // if text is too long, skip
+                if (value.length > 50) {
+                    return {
+                        matched_substring,
+                        main_text: value
+                    };
+                }
+                matchStart = value.toLowerCase().indexOf(query);
+                matched_substring = matchStart > -1 ? [{
+                    offset: matchStart,
+                    length: query.length
+                }] : [];
+                return {
+                    matched_substring,
+                    main_text: value
+                };
+            } else if (Array.isArray(value)) {
+                for (let val of value) {
+                    return searchIn(query, val);
+                }
+            } else if (typeof value === 'object') {
+                for (let key in value) {
+                    return searchIn(query, value[key]);
+                }
+            }
+        };
+        // string where the keyword is found
+        let main_text = '';
+        let matched_substring = [];
+
+        try {
+            let res = await this.search({
+                query,
+                params,
+                fields
+            });
+            // return formatted array of object
+            res = res.items.map(o => {
+
+                let volume = o.volumeInfo;
+                // looking for match in object values
+                for (let key in volume) {
+                    ({
+                        main_text,
+                        matched_substring
+                    } = matchSearch(query, volume[key]));
+                    if (matched_substring.length) break;
+                }
+
+                return {
+                    main_text,
+                    matched_substring
+                };
+            });
+            // filter unmatched
+            res = res.filter(o => o.matched_substring.length);
+            // return uniques
+            res = [...new Map(res.map(item => [JSON.stringify(item), item])).values()];
+            // sort by priority
+            res = res.sort((a, b) => a.matched_substring.offset < b.matched_substring.offset);
+            //
+            return res;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+
+
+
+
+
+
+
 
     /**
      * Return a listing of all of the authenticated user's bookshelves
@@ -221,13 +499,21 @@ export default {
     async getMyBookshelves() {
         const requiredFields = 'items(id,title,volumeCount)';
         const path = `mylibrary/bookshelves`;
-        
+
         try {
-            return await this._httpGetRequest(path, requiredFields, true);
+            return this._httpGetRequest(path, requiredFields, true, false);
         } catch (error) {
             throw error;
         }
     },
+
+
+
+
+
+
+
+
 
     /**
      * Returns a listing of the volumes on the authenticated user's bookshelf
@@ -237,19 +523,28 @@ export default {
      * @param {number} startIndex The position in the collection at which to start the list of results.
      * @returns 
      */
-    async getMyBookshelfVolumes(shelfID, limit = 10, startIndex = 0) {
+    async getMyBookshelfVolumes(shelfID, { maxResults = 10, startIndex = 0 }) {
         // if not a valid shelf id (must be an integer)
-        if (!Number.isInteger(shelfID) || shelfID < 0) throw new Error(`'${shelfID}' is not a valid shelf id`);
+        if (!(shelfID >= 0)) throw new Error(`'${shelfID}' is not a valid shelf id`);
         // else
-        const requiredFields = 'id,volumeInfo(title,authors,imageLinks),totalItems';
-        const path = `mylibrary/bookshelves/${shelfID}/volumes?maxResults=${limit}&startIndex=${startIndex}`;
+        const requiredFields = 'items/id,items/volumeInfo(title,authors,imageLinks,description),totalItems';
+        const path = `mylibrary/bookshelves/${shelfID}/volumes?maxResults=${maxResults}&startIndex=${startIndex}`;
 
         try {
-            return await this._httpGetRequest(path, requiredFields, true);
+            return this._httpGetRequest(path, requiredFields, true, false);
         } catch (error) {
             throw error;
         }
     },
+
+
+
+
+
+
+
+
+
 
     /**
      * Add a volume to the authenticated user's bookshelf
@@ -260,14 +555,24 @@ export default {
      * @returns 
      */
     async _addVolumeToMyBookshelf(shelfID, volumeID) {
-        const query = `/bookshelves/${shelfID}/volumes?volumeId=${volumeID}`;
+        const query = `mylibrary/bookshelves/${shelfID}/addVolume?volumeId=${volumeID}`;
 
         try {
-            return await this._httpRequest(query);
+            return this._httpPostRequest(query);
         } catch (error) {
             throw error;
         }
     },
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Remove a volume from the authenticated user's bookshelf
@@ -278,14 +583,24 @@ export default {
      * @returns 
      */
     async _removeVolumeToMyBookshelf(shelfID, volumeID) {
-        const query = `/bookshelves/${shelfID}/removeVolume?volumeId=${volumeID}`;
+        const query = `mylibrary/bookshelves/${shelfID}/removeVolume?volumeId=${volumeID}`;
 
         try {
-            return await this._httpRequest(query);
+            return this._httpPostRequest(query);
         } catch (error) {
             throw error;
         }
     },
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Add a volume to the authenticated user's Favorites bookshelf
@@ -297,11 +612,21 @@ export default {
         const shelfID = 0;
 
         try {
-            return await this._addVolumeToMyBookshelf(shelfID, volumeID);
+            return this._addVolumeToMyBookshelf(shelfID, volumeID);
         } catch (error) {
             throw error;
         }
     },
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Add a volume to the authenticated user's To Read bookshelf
@@ -313,11 +638,21 @@ export default {
         const shelfID = 2;
 
         try {
-            return await this._addVolumeToMyBookshelf(shelfID, volumeID);
+            return this._addVolumeToMyBookshelf(shelfID, volumeID);
         } catch (error) {
             throw error;
         }
     },
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Remove a volume from the authenticated user's Favorites bookshelf
@@ -329,11 +664,21 @@ export default {
         const shelfID = 0;
 
         try {
-            return await this._removeVolumeToMyBookshelf(shelfID, volumeID);
+            return this._removeVolumeToMyBookshelf(shelfID, volumeID);
         } catch (error) {
             throw error;
         }
     },
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Remove a volume from the authenticated user's To Read bookshelf
@@ -345,11 +690,20 @@ export default {
         const shelfID = 2;
 
         try {
-            return await this._removeVolumeToMyBookshelf(shelfID, volumeID);
+            return this._removeVolumeToMyBookshelf(shelfID, volumeID);
         } catch (error) {
             throw error;
         }
     },
+
+
+
+
+
+
+
+
+
 
     /**
      * Return true if the volume is in the given bookshelf
@@ -364,7 +718,7 @@ export default {
         // need bookshelf list
         const limit = 40;
         const bookshelf = await this.getMyBookshelfVolumes(bookshelfID, limit, startIndex);
-        let inArray = bookshelf.items.find(o => o.id === volumeID) > -1;
+        let inArray = bookshelf.items.findIndex(o => o.id === volumeID) > -1;
 
         if (!inArray) {
             startIndex += limit;
@@ -372,7 +726,52 @@ export default {
                 return this._isVolumeInBookshelf(volumeID, bookshelfID, ++startIndex);
             else
                 return false;
+        } else return true;
+    },
+
+
+
+
+
+
+
+
+    /**
+     * Return true if the volume is in the favorites bookshelf, else return false
+     * 
+     * @param {String} volumeID
+     * @returns
+     */
+    async isFavorite(volumeID) {
+        const shelfID = 0;
+
+        try {
+            return this._isVolumeInBookshelf(volumeID, shelfID);
+        } catch (error) {
+            throw error;
         }
-        else return true;
-    }
+    },
+
+
+
+
+
+
+
+
+    /**
+     * Return true if the volume is in the To Read bookshelf, else return false
+     * 
+     * @param {String} volumeID
+     * @returns
+     */
+    async isToRead(volumeID) {
+        const shelfID = 2;
+
+        try {
+            return this._isVolumeInBookshelf(volumeID, shelfID);
+        } catch (error) {
+            throw error;
+        }
+    },
 }

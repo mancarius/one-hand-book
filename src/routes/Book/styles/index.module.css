@@ -1,30 +1,91 @@
 .btnBack {
   position: fixed;
   top: 0;
-  right: 0;
+  left: 0;
   z-index: 10;
   margin: .5rem;
 }
 
-.cover {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
+.book_container {
+  margin-bottom: 2rem;
+}
+
+@media only screen and (max-width: 400px) {
+  .book_container {
+    -webkit-box-flex: inherit;
+        -ms-flex: inherit;
+            flex: inherit;
+    display: inherit;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-flow: inherit;
+            flex-flow: inherit;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .book_container {
+        grid-template-areas: 'userActions userActions' 'cover info' 'cover actions' 'synopsis synopsis' 'bibliography bibliography' 'exploreAuthor exploreAuthor' !important;
+  }
+}
+
+@media only screen and (min-width: 400px) {
+  .book_container {
+    display: -ms-grid;
+    display: grid;
+    gap: 2rem;
+        grid-template-areas: 'userActions userActions' 'cover info' 'actions actions' 'synopsis synopsis' 'bibliography bibliography' 'exploreAuthor exploreAuthor';
+    -ms-grid-columns: auto 1fr;
+        grid-template-columns: auto 1fr;
+  }
+}
+
+.book_container > * {
+  background-color: var(--main-bg-color);
   z-index: 1;
-  -webkit-transition: all 400ms ease;
-  transition: all 400ms ease;
-  height: auto;
-  min-height: 80vh;
-  margin: -0.5rem;
+}
+
+.cover {
+  grid-area: cover;
+  width: 100%;
+  -webkit-transition: all 1s ease;
+  transition: all 1s ease;
+  /* margin: -0.5rem; */
   margin-bottom: 0;
 }
 
+@media only screen and (max-width: 400px) {
+  .cover {
+    z-index: 0;
+    height: auto;
+    border-radius: .5rem;
+    max-width: 12rem;
+    -webkit-transition-delay: 400ms;
+            transition-delay: 400ms;
+    margin: 0 auto;
+  }
+  .cover.zoom {
+    max-width: 100%;
+  }
+}
+
+@media only screen and (min-width: 400px) {
+  .cover {
+    max-width: 128px;
+  }
+}
+
 .info {
+  grid-area: info;
   position: relative;
   z-index: 2;
-  background-color: var(--main-bg-color);
-  margin: 0 -.5rem;
-  padding: 1rem;
+}
+
+@media only screen and (max-width: 400px) {
+  .info {
+    margin: 0 -.5rem;
+    padding: 1rem;
+  }
 }
 
 .info > div {
@@ -33,10 +94,19 @@
 
 .title {
   margin-bottom: 1rem;
+  font-size: 1.5em;
+  font-weight: normal;
+}
+
+@media only screen and (max-width: 400px) {
+  .title {
+    margin-top: .8rem;
+  }
 }
 
 .author {
   font-weight: normal;
+  font-size: 1.1em;
 }
 
 .publishing {
@@ -55,6 +125,23 @@
   white-space: nowrap;
 }
 
+.card {
+  padding: 2rem 1rem;
+  margin-bottom: 1rem;
+}
+
+@media only screen and (min-width: 400px) {
+  .card {
+    padding: 1rem;
+  }
+}
+
+.card h2 {
+  font-size: 1.25em;
+  font-weight: normal;
+  margin-bottom: 2rem;
+}
+
 .review {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -68,59 +155,154 @@
   margin-left: .5em;
 }
 
-.synopsis > button {
-  cursor: pointer;
+.userActionsContainer {
+  grid-area: userActions;
+  background-color: var(--main-bg-color);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+@media only screen and (max-width: 400px) {
+  .userActionsContainer {
+    position: fixed;
+    -webkit-box-pack: space-evenly;
+        -ms-flex-pack: space-evenly;
+            justify-content: space-evenly;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+  }
+}
+
+@media only screen and (min-width: 400px) {
+  .userActionsContainer {
+    border-radius: 50vw;
+    background-color: var(--lightgray);
+  }
+}
+
+.userActionsContainer button {
   border: none;
   background: none;
-  font-size: inherit;
+  padding: .5rem;
+  font-size: 1.5rem;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}
+
+@media only screen and (min-width: 400px) {
+  .userActionsContainer button:first-of-type {
+    margin-right: auto;
+  }
+}
+
+.actionsContainer {
+  grid-area: actions;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+@media only screen and (max-width: 400px) {
+  .actionsContainer {
+    -webkit-box-pack: space-evenly;
+        -ms-flex-pack: space-evenly;
+            justify-content: space-evenly;
+    margin: 0 -.5rem;
+    padding: 1rem 0 2rem;
+  }
+}
+
+@media only screen and (min-width: 400px) {
+  .actionsContainer button + button {
+    margin-left: 2rem;
+  }
+}
+
+.synopsis {
+  grid-area: synopsis;
+}
+
+.synopsis .buttonContainer {
   display: block;
   width: 100%;
   text-align: center;
-  padding: 1rem;
-  text-transform: uppercase;
-  background-color: #fff2a8;
-  color: #696969;
-  font-weight: bold;
-  border-radius: 3rem;
-  outline: none;
+  padding-top: 2rem;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(50%, var(--main-bg-color)), to(transparent));
+  background: linear-gradient(0deg, var(--main-bg-color) 50%, transparent 100%);
+  position: -webkit-sticky;
+  position: sticky;
+  z-index: 2;
+  margin-top: -2.5rem;
+}
+
+@media only screen and (min-width: 400px) {
+  .synopsis .buttonContainer {
+    bottom: 0;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .synopsis .buttonContainer {
+    bottom: 2.5rem;
+  }
 }
 
 .synopsis-window {
   overflow: hidden;
-  max-height: 5em;
+  max-height: 6em;
   text-overflow: ellipsis;
   -webkit-transition: 400ms ease;
   transition: 400ms ease;
-  margin-top: 0;
+  margin: 0;
+  line-height: 1.5em;
 }
 
 .bibliography {
-  background-color: var(--main-bg-color);
-  padding-top: 2rem;
+  grid-area: bibliography;
   z-index: 2;
-  padding: 1rem;
-  margin: 0 -.5rem;
 }
 
-.bibliography h2 {
-  font-size: 1.2em;
+@media only screen and (min-width: 400px) {
+  .bibliography dl {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: auto 1fr;
+        grid-template-columns: auto 1fr;
+  }
 }
 
-.bibliography dl {
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: 1fr auto;
-      grid-template-columns: 1fr auto;
-}
-
-.bibliography dl dt, .bibliography dl dd {
+.bibliography dl dt,
+.bibliography dl dd {
   margin: 0;
-  margin-top: .75rem;
+}
+
+@media only screen and (min-width: 400px) {
+  .bibliography dl dt,
+  .bibliography dl dd {
+    margin-top: 1rem;
+  }
 }
 
 .bibliography dl dt {
-  margin-right: .75rem;
+  margin-right: 2rem;
   white-space: nowrap;
   font-weight: bold;
+}
+
+@media only screen and (max-width: 400px) {
+  .bibliography dl dt {
+    margin-top: 1rem;
+    margin-bottom: .5rem;
+  }
+}
+
+.explore {
+  grid-area: exploreAuthor;
+  background-color: var(--lightgray);
+  margin: 0;
 }
 /*# sourceMappingURL=index.module.css.map */

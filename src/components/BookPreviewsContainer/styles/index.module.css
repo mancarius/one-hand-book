@@ -1,12 +1,32 @@
 .grid {
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: (minmax(130px, 1fr))[auto-fill];
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: .5rem;
+  gap: 5vmin;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.grid[data-size="small"] {
+  -ms-grid-columns: (minmax(150px, 1fr))[auto-fill];
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+.grid[data-size="normal"] {
+  -ms-grid-columns: (minmax(300px, 1fr))[auto-fill];
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.grid[data-size="large"] {
+  -ms-grid-columns: (minmax(10rem, 10rem))[auto-fill];
+      grid-template-columns: repeat(auto-fill, minmax(10rem, 10rem));
+}
+
+.grid[data-size="large"] img[data-role="cover"] {
+  width: 100%;
 }
 
 .grid > * {
-  height: 12rem;
+  height: auto !important;
 }
 /*# sourceMappingURL=index.module.css.map */

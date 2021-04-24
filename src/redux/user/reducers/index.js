@@ -5,9 +5,16 @@ import initialState from '../initialState'
 export default function (state = initialState, action) {
     switch (action.type) {
         case user.login().type:
-            const { displayName, uid, photoURL, token } = action.payload;
+            const { displayName, uid, photoURL, token, refreshToken } = action.payload;
             localStorage.setItem("user", JSON.stringify({ displayName, uid, photoURL, token }));
-            return { ...state.user, displayName, uid, photoURL, token };
+            return {
+                ...state.user,
+                displayName,
+                uid,
+                photoURL,
+                token,
+                refreshToken
+            };
         case user.logout().type:
             localStorage.removeItem('user');
             return { };

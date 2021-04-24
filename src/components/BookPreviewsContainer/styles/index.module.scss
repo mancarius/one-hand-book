@@ -1,9 +1,26 @@
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: .5rem;
+    gap: 5vmin;
+    justify-content: center;
+
+    &[data-size="small"] {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+
+    &[data-size="normal"] {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        //max-height: 6rem;
+    }
+
+    &[data-size="large"] {
+        grid-template-columns: repeat(auto-fill, minmax(10rem, 10rem));
+
+        img[data-role="cover"] {
+            width: 100%;
+        }
+    }
 
     &>* {
-        height: 12rem;
+        height: auto !important;
     }
 }

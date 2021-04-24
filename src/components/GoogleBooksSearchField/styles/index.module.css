@@ -1,0 +1,41 @@
+.form {
+  width: 100%;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  margin: .5rem 0;
+  overflow-y: auto;
+  -webkit-transition: 'background-color' ease 800ms;
+  transition: 'background-color' ease 800ms;
+}
+
+@media only screen and (min-width: 400px) {
+  .form.fixed {
+    position: relative;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .form.fixed {
+    position: fixed;
+    z-index: 999;
+    background-color: var(--main-bg-color);
+  }
+}
+
+.form > div:first-child {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.form .grid_container {
+  margin: 0 auto;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  padding-left: 1rem;
+  padding-bottom: .5rem;
+  padding-right: 1rem;
+}
+/*# sourceMappingURL=index.module.css.map */

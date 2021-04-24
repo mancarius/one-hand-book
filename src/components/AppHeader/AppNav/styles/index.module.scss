@@ -1,3 +1,5 @@
+@import '../../../../styles/globals';
+
 .nav {
     margin: {
         left: auto;
@@ -13,9 +15,48 @@
 }
 
 .item {
+
+    font-size: .8em;
+    margin: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    &.active {
+        display: none
+    }
+
     a {
-        padding:.5em;
-        font-size: 1.5em;
+        padding: .2em .5em;
+        font-size: 2em;
         display: flex;
+        align-items: center;
+        text-decoration: none;
+        border-radius: 2em;
+        transition: 200ms ease;
+
+        @media only screen and (min-width: $media-query-lg) {
+            &:hover {
+                //background-color: var(--lightyellow);
+                box-shadow: 0 1px 4px -2px #333333;
+                margin-top: -1px;
+            }
+        }
+    }
+
+    .avatar {
+        background-color: var(--lightgray) !important;
+        color: var(--darkgray) !important;
+        font-size: inherit;
+    }
+
+    .label {
+        font-size: 1em;
+        font-size: 1rem;
+        margin-left: .5em;
+
+        @media only screen and (max-width: $media-query-lg) {
+            display: none;
+        }
     }
 }

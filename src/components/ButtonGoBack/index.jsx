@@ -3,7 +3,7 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import styles from './styles/index.module.css'
 
-export default React.memo(({ children, classes, title }) => {
+export default React.memo(({ children, className, title }) => {
     const history = useHistory();
 
     const goBack = () => {
@@ -13,5 +13,5 @@ export default React.memo(({ children, classes, title }) => {
             history.push('/');
     }
 
-    return <button className={`${styles.btn} ${classes}`} onClick={goBack} title={title} alt={title}>{children}</button>;
+    return <button className={className} onClick={goBack} title={title} alt={title}>{children}</button>;
 });

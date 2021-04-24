@@ -1,0 +1,16 @@
+.inline {
+    display: flex;
+    align-items:center;
+    justify-content: center;
+
+    img {
+        height: auto;
+        width: .75em;
+        transform: rotateZ(90deg);
+    }
+}
+
+.onlyIcon {
+    width: 1em;
+    transform: rotateZ(90deg);
+}

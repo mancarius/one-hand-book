@@ -1,0 +1,39 @@
+@import '../../../styles/globals';
+
+.form {
+    width: 100%;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    margin: .5rem 0;
+    overflow-y: auto;
+    transition: 'background-color' ease 800ms;
+
+    &.fixed {
+        @media only screen and (min-width: $media-query-sx) {
+            position: relative;
+        }
+        @media only screen and (max-width: $media-query-sx) {
+            position: fixed;
+            z-index: 999;
+            background-color: var(--main-bg-color);
+        }
+    }
+
+    &>div:first-child {
+        position:sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .grid_container {
+        margin: 0 auto;
+        border-radius: 1.5rem;
+        overflow: hidden;
+        padding: {
+            left: 1rem;
+            bottom: .5rem;
+            right: 1rem;
+        }
+    }
+}

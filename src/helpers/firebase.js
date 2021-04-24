@@ -19,8 +19,14 @@ class Firebase {
     }
 
     GoogleAuth = () => {
-        let provider = new firebase.auth.GoogleAuthProvider();
-        this.auth.signInWithRedirect(provider);
+        try {
+            let provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('https://www.googleapis.com/auth/books');
+            firebase.auth().useDeviceLanguage();
+            this.auth.signInWithRedirect(provider);
+        } catch (err) {
+            throw err;
+        }
     }
 
     getGoogleRedirectResult = async () => {
@@ -28,9 +34,12 @@ class Firebase {
     }
 
 
-    logout = async () => {
-        return await this.auth.signOut();
+    signOut = async () => {
+        return this.auth.signOut();
     }
+
+
+    getCurrentUser = () => firebase.auth().currentUser;
 }
 
 export default new Firebase();

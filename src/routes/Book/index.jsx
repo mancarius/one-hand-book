@@ -1,122 +1,187 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable import/no-anonymous-default-export */
 import React, { useState, useEffect } from 'react'
-import { useParams, useHistory } from 'react-router-dom' 
-import { useDispatch, useSelector } from "react-redux";
-import { useSnackbar } from 'notistack';
+import { useLocation, useHistory } from 'react-router-dom' 
+import { useDispatch } from "react-redux";
 import { Rating } from '@material-ui/lab'
-import parseHTML from 'html-react-parser'
+import { Paper, List, IconButton } from '@material-ui/core';
+import action from '../../redux/actions'
 import GoogleBooks from '../../helpers/googleBooksApi'
 import BookContextProvider from '../../components/BookContextProvider'
 import BookActions from '../../components/BookActions'
-import CancelRoundedIcon from '@material-ui/icons/CancelRounded';
+import ArrowBackRounded from '@material-ui/icons/ArrowBackRounded';
+import UnfoldMoreRoundedIcon from '@material-ui/icons/UnfoldMoreRounded';
 import ButtonBack from '../../components/ButtonGoBack'
+import BookCover from '../../components/Book/Cover'
+import ExploreLink from '../../components/Book/ExploreLink'
+import BuyButton from '../../components/Book/BuyButton'
+import WebReaderButton from '../../components/Book/WebReaderButton'
+import GoToTopButton from '../../components/GoToTopButton'
 import styles from './styles/index.module.css';
+import useErrorsHandler from '../../helpers/errorsHandler';
+import UnfoldLessRoundedIcon from '@material-ui/icons/UnfoldLessRounded';
 
 
-export default React.memo(props => {
-    const { volumeID } = useParams();
-    const { enqueueSnackbar } = useSnackbar();
+
+
+
+export default React.memo(() => {
+    const location  = useLocation();
     const history = useHistory();
-    const user = useSelector(state => state.user);
+    const volumeID = new URLSearchParams(location.search).get("volumeID");
+    const errorsHandler = useErrorsHandler();
+    const dispatch = useDispatch();
     const [expandSynopsis, setExpandSynopsis] = useState(false);
-    const [favorite, setFavorite] = useState(false);
-    const [readLater, setReadLater] = useState(false);
     const [volume, setVolume] = useState({});
-    const [image, setImage] = useState(null);
+    const [imageLinks, setImageLinks] = useState({});
     const [loading, setLoading] = useState(true);
+    const [coverZoom, setCoverZoom] = useState(true);
 
-    const toggleAction = (type) => {
-        if ('token' in user) {
-            if(type === 'favorite')
-                setFavorite(prev => !prev);
-            else if (type === 'toRead')
-                setReadLater(prev => !prev);
-        }
-        else
-        {
-            enqueueSnackbar('Sign in to add this book to your favorites');
-        }
-    }
+
+
+    const fetchVolume = React.useCallback(() => {
+        GoogleBooks.getVolume(volumeID)
+            .catch(error => {
+                errorsHandler(error);
+            })
+            .then(res => {
+                console.log(res);
+                setVolume(res);
+            });
+    }, [volumeID]);
+
 
     const toggleSynopsis = () => {
         setExpandSynopsis(prev => !prev);
     }
+
+
+
+    const toggleCoverZoom = () => {
+        console.log('toggle');
+        setCoverZoom(prev => !prev);
+    }
     
+
     useEffect(() => {
         // if not receive a valid volumeID
         (volumeID === 'undefined' || volumeID.lenght === 0) && history.push('/');
         // else
-        GoogleBooks.getVolume(volumeID)
-            .catch(error => {
-                
-            })
-            .then(res => {
-                console.log(res);
-                setVolume({ ...res.volumeInfo, sale: res.saleInfo });
-            });
-        // cancel pending request on component unmount
-        return () => GoogleBooks.abort();
+        // set page header
+        dispatch(action.document.title.set(null));
+        dispatch(action.document.header.set.title(null));
+        // then
+        // connect to api
+        fetchVolume();
+        
+        return () => {
+        }
     }, []);
 
     useEffect(() => {
-        let img = volume?.imageLinks?.large
-            ?? volume?.imageLinks?.medium
-            ?? volume?.imageLinks?.small
-            ?? volume?.imageLinks?.thumbnail
-            ?? '';
-        if (img !== '') {
-            setImage(img);
-        }
+        let imgs = volume?.volumeInfo?.imageLinks ?? {};
+        let title = volume?.volumeInfo?.title ?? null;
 
-        setFavorite(volume.isFavorite);
-        setReadLater(volume.toRead);
+        dispatch(action.document.title.set(title));
+
+        setImageLinks(imgs);
+
     }, [volume]);
 
+    useEffect(() => {
+        !loading && toggleCoverZoom();
+    }, [loading])
+
     
-    return (<>
-        <ButtonBack classes={styles.btnBack} title='Go back'><CancelRoundedIcon style={{color: 'inherit', textShadow: 'inherit'}}/></ButtonBack>
-        {/* work around per image load event */}
-        <img style={{display: 'none'}} src={image} onLoad={() => setLoading(false)} />
+    return (<article className={styles.book_container}>
+        {/* work around for image load event */}
+        <img style={{display: 'none'}} alt="" src={imageLinks.thumbnail} onLoad={() => setLoading(false)} />
         <BookContextProvider
             volume={volume}
-            favorite={favorite}
-            toggleAction={toggleAction}
-            readLater={readLater}
             loading={loading}
         >
-            <img className={ styles.cover } src={image} alt="Frontcover" />
+            <UserActions>
+                <ButtonBack title='Go back'>
+                    <ArrowBackRounded style={{ color: 'inherit', textShadow: 'inherit' }} />
+                </ButtonBack>
+                <BookActions.FavoriteButton />
+                <BookActions.ToReadButton />
+                <GoToTopButton />
+            </UserActions>
+            <BookCover className={styles.cover + (coverZoom ? ' ' + styles.zoom : '')} imageLinks={imageLinks} title="Frontcover" />
             <div className={styles.info}>
-                <h1 className={styles.title}>{volume?.title}</h1>
-                <h3 className={styles.author}>{volume?.authors?.join(', ')}</h3>
-                <div className={styles.publishing}><div className={styles.publisher}>{volume?.publisher}</div><div className={styles['published-date']}>({volume?.publishedDate?.split('-')[0]})</div></div>
+                <h1 className={styles.title}>{volume?.volumeInfo?.title}</h1>
+                <h3 className={styles.author}>{volume?.volumeInfo?.authors?.join(', ')}</h3>
+                <div className={styles.publisher}>{volume?.volumeInfo?.publisher}</div>
                 <div className={styles.review}>
-                    <Rating name="read-only" value={volume?.averageRating ?? 0} precision={0.5} readOnly size='small' />
-                    <span> (<span className="count">{volume?.ratingsCount}</span> reviews)</span>
-                </div>
-                <BookActions style={{margin: '2rem 0'}} />
-                <div className={styles.synopsis}>
-                    <p className={styles['synopsis-window']} style={expandSynopsis ? { maxHeight: '1000vh' } : {}}>{ parseHTML(volume?.description ?? '')}</p>
-                    <button onClick={toggleSynopsis}>{expandSynopsis ? 'Less...' : 'More...'}</button>
+                    <Rating name="read-only" value={volume?.volumeInfo?.averageRating ?? 0} precision={0.5} readOnly size='small' />
+                    <span> (<span className="count">{volume?.volumeInfo?.ratingsCount ?? '0'}</span>)</span>
                 </div>
             </div>
-            <div className={styles.bibliography}>
+            <div className={styles.actionsContainer}>
+                <BuyButton ebook />
+                <WebReaderButton variant="outlined" />
+            </div>
+            {
+                volume.volumeInfo?.description &&
+                <Paper elevation={0} className={styles.card +' '+styles.synopsis}>
+                    <h2>Description</h2>
+                    <p className={styles['synopsis-window']} style={expandSynopsis ? { maxHeight: '1000vh' } : {}}>{volume?.volumeInfo?.description?.replace(/<(.|\n)*?>/g, '') ?? ''}</p>
+                    <div className={styles.buttonContainer} style={expandSynopsis ? { paddingTop: 0, marginTop: 0 } : {}}>
+                        <IconButton
+                            aria-label={expandSynopsis ? 'Read less' : 'Read more'}
+                            onClick={toggleSynopsis}
+                        >
+                            {
+                                expandSynopsis ?
+                                    <UnfoldLessRoundedIcon fontSize="inherit"/>
+                                    :
+                                    <UnfoldMoreRoundedIcon fontSize="inherit"/>
+                            }
+                        </IconButton>
+                    </div>
+                </Paper>
+            }            
+            <Paper elevation={0} className={styles.card +' '+styles.bibliography}>
                 <h2>Bibliography</h2>
                 <dl>
                     <dt>Title</dt>
-                    <dd>{ volume?.title }</dd>
+                    <dd>{ volume?.volumeInfo?.title }</dd>
                     <dt>Genre</dt>
-                    <dd>{ volume?.mainCategory ?? volume?.categories?.join() ?? 'General' }</dd>
+                    <dd>{ volume?.volumeInfo?.mainCategory ?? volume?.volumeInfo?.categories?.join(' - ') ?? 'General' }</dd>
                     <dt>Authors</dt>
-                    <dd>{ volume?.authors?.join(', ') }</dd>
+                    <dd>{ volume?.volumeInfo?.authors?.join(', ') }</dd>
                     <dt>Publisher</dt>
-                    <dd>{volume?.publisher}, { volume?.publishedDate?.split('-')[0] }</dd>
+                    <dd>{volume?.volumeInfo?.publisher}, { volume?.volumeInfo?.publishedDate?.split('-')[0] }</dd>
                     <dt>ISBN</dt>
-                    <dd>{ volume?.industryIdentifiers?.map(i => i.identifier).join(', ') }</dd>
+                    <dd>{ volume?.volumeInfo?.industryIdentifiers?.map(i => i.identifier).join(', ') }</dd>
                     <dt>Lenght</dt>
-                    <dd>{ volume?.pageCount } pages</dd>
+                    <dd>{ volume?.volumeInfo?.pageCount } pages</dd>
                 </dl>
-            </div>
+            </Paper>
+            <Paper elevation={0} className={styles.card +' '+styles.explore}>
+                <h2>Related</h2>
+                <List component="nav">
+                    {
+                        volume?.volumeInfo?.authors?.map((author, index) => <ExploreLink key={index} item={author} folder="inauthor" secondary="Author">More by </ExploreLink>)
+                    }
+                    <ExploreLink item={volume?.volumeInfo?.publisher} folder="inpublisher" secondary="Publisher">More by </ExploreLink>
+                </List>
+            </Paper>
         </BookContextProvider>
-    </>);
+    </article>);
 });
+
+
+
+
+
+
+const UserActions = ({ children, ...props }) => {
+    console.log('children', children);
+    return (
+        <div className={styles.userActionsContainer}>
+            {children}
+        </div>
+    );
+}

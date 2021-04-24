@@ -7,19 +7,25 @@
     background-image: url(../../../assets/2975207.webp);
     background-position-x: right;
     background-position-y: bottom;
-    background-size: 50%;
+    background-size: 15rem;
     background-repeat: no-repeat;
 }
 
 .title {
-    margin: 0 1rem 3rem;
+    margin: 5rem 1rem 8rem;
     line-height: 1.5em;
     font-size: 2.5em;
     opacity: .8;
 }
 
-.button {
+.button_ok {
     border-radius: 2em;
     padding: 1rem 2rem;
-    background-color: #ffffa5;
+    background-color: var(--button-success-bg);
+}
+
+.button_ko {
+    @extend .button_ok;
+    background-color: var(--button-default-bg);
+    margin-top: 2rem;
 }

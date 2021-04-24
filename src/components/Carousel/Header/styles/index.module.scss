@@ -1,0 +1,31 @@
+.header {
+    display: flex;
+    align-items: center;
+
+    &>a {
+        flex: 1;
+        display: inherit;
+        align-items: inherit;
+        justify-content: inherit;
+        color: inherit;
+        text-decoration: inherit;
+        background-color: inherit;
+        cursor: pointer;
+    }
+}
+
+.title {
+    margin: 1rem .5rem;
+    font-size: 1em;
+    font-weight: bold;
+    margin-right: auto;
+}
+
+.primaryIcon {
+    display: flex;
+    padding: 0 1rem;
+}
+
+.secondaryIcon {
+    @extend .primaryIcon;
+}

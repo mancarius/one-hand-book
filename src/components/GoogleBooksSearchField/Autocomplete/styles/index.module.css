@@ -1,0 +1,16 @@
+.popper, .paper, .paper .listbox {
+  height: auto;
+  max-height: auto;
+  overflow-y: hidden;
+}
+
+.paper, .paper .listbox {
+  background-color: #fff;
+}
+
+.paper .listbox > li, .paper .listbox .listbox > li {
+  padding-left: 0;
+  padding-right: 0;
+  border-radius: .5rem;
+}
+/*# sourceMappingURL=index.module.css.map */

@@ -11,5 +11,9 @@
   -webkit-box-direction: normal;
       -ms-flex-flow: column;
           flex-flow: column;
+  background-color: inherit;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
 }
 /*# sourceMappingURL=index.module.css.map */

@@ -1,0 +1,17 @@
+.paper {
+    @extend .popper;
+    background-color: #fff;
+
+    .listbox {
+        @extend .paper;
+
+        &>li{
+            padding: {
+                left: 0;
+                right: 0;
+            };
+
+            border-radius: .5rem;
+        }
+    }
+}

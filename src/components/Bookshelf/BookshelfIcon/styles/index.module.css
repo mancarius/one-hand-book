@@ -1,0 +1,23 @@
+.icon {
+  border-radius: 50%;
+  width: 2em;
+  height: 2em;
+  font-size: 1.5em;
+  overflow: hidden;
+  position: relative;
+  -webkit-box-shadow: inset 0px 0px 5px -1px #333333a6;
+          box-shadow: inset 0px 0px 5px -1px #333333a6;
+}
+
+.images_container {
+  position: relative;
+  margin-top: 50%;
+  -webkit-transform: translate(0%, -50%);
+          transform: translate(0%, -50%);
+  gap: 0;
+}
+
+.image {
+  width: 100%;
+}
+/*# sourceMappingURL=index.module.css.map */
