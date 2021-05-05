@@ -1,70 +1,76 @@
-# Getting Started with Create React App
+# React Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![GitHub repo size](https://img.shields.io/github/repo-size/mancarius/react-project?style=plastic)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/mancarius/react-project?style=plastic)
+![GitHub language count](https://img.shields.io/github/languages/count/mancarius/react-project?style=plastic)
+![GitHub top language](https://img.shields.io/github/languages/top/mancarius/react-project?style=plastic)
 
-## Available Scripts
+<br/>
 
-In the project directory, you can run:
+![project screen shot](https://github.com/mancarius/react-project/blob/main/images/screenshot.png)
 
-### `npm start`
+<br/>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+React app that allows you to search in a large books collection and view the details of each volume. By logging in with your Google account, you can also view and manage your shelves.
+This is a practice project.
+([View online](https://www.mattiamancarella.com/works/react/react-project/))
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+<br/>
 
-### `npm test`
+### Built With
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* [notistack](https://https://iamhosseindhv.com/notistack)
+* [lodash](https://lodash.com)
+* [react-infinite-scroll-hook](https://github.com/onderonur/react-infinite-scroll-hook)
+* [react-redux](https://react-redux.js.org)
+* [react-router-dop](https://reactrouter.com/web/guides/quick-start)
+* [react-slick](https://react-slick.neostack.com)
+* [material-ui](https://material-ui.com/)
 
-### `npm run build`
+<br/>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Installation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Just fork and install packages with <code>npm</code> running the following command in the content folder:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm install
+```
 
-### `npm run eject`
+<br/>
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Usage
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+In order to access the api services, you need to get your own api keys respectivelly from [Google Books](https://developers.google.com/books), [firebase](https://firebase.google.com/) and [ipstack](https://ipstack.com/).
+Then save your keys in your <code>.env</code> file in the root directory like this
+```.env
+REACT_APP_FIREBASE_KEY=your-firebase-api-key
+REACT_APP_FIREBASE_DOMAIN=your-firebase-api-domain
+REACT_APP_FIREBASE_PROJECT_ID=your-firebase-api-project-id
+REACT_APP_FIREBASE_STORAGE_BUCKET=your-firebase-api-storage-bucket
+REACT_APP_FIREBASE_SENDER_ID=your-firebase-api-sender
+REACT_APP_FIREBASE_ID=your-firebase-api-id
+REACT_APP_FIREBASE_MEASURAMENT_ID=your-firebase-api-mesurament-id
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+REACT_APP_GOOGLE_BOOKS_APIKEY=your-google-books-api-key
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+REACT_APP_IP_STACK_APIKEY=your-ip-stack-api-key
+```
 
-## Learn More
+<br/>
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Credits
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+* Book collection is provided by [Google](https://books.google.it/). </br>
+* Ip search search is provided by [ipstack.com](https://ipstack.com/)
 
-### Code Splitting
+<br/>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-### Analyzing the Bundle Size
+<br/>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## License
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+[MIT](https://choosealicense.com/licenses/mit/)
