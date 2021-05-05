@@ -7,7 +7,7 @@
 
 <br/>
 
-![project screen shot](https://github.com/mancarius/react-project/blob/main/images/screenshot.png)
+![project screen shot](https://github.com/mancarius/react-project/blob/master/images/screenshot.png)
 
 <br/>
 
