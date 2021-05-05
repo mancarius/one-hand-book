@@ -120,7 +120,6 @@ export default function SearchResults(props) {
         })
         .finally(() => {
           if (isSubscribed.current) {
-            console.log("changing to ", false);
             setLoading(false);
           }
         });
@@ -188,7 +187,6 @@ export default function SearchResults(props) {
   }, [isQueryChanged]);
 
   useEffect(() => {
-    console.log('changed to ', loading);
     loading
       ? dispatch(action.document.loading.start())
       : dispatch(action.document.loading.stop());

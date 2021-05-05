@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import _ from 'lodash';
 import coverFallback from '../../../assets/no-book-cover.jpg'
+import styles from './styles/index.module.css'
 
 export default React.memo(function Cover({ title, className, imageLinks = {}, ...props }) {
     const imgRef = useRef(null);
@@ -16,9 +17,14 @@ export default React.memo(function Cover({ title, className, imageLinks = {}, ..
         let imgWidth = imgRef.current.width;
         let newSrc = imageLinks?.thumbnail ?? coverFallback;
 
-        if (imgWidth <= 300 && 'small' in imageLinks) newSrc = imageLinks.small;
-        else if (imgWidth <= 575) newSrc = imageLinks.medium ?? imageLinks.small ?? newSrc;
-        else newSrc = imageLinks.large ?? imageLinks.medium ?? imageLinks.small ?? newSrc;
+        if (imgWidth > 130) {
+            if (imgWidth <= 300 && "small" in imageLinks)
+                newSrc = imageLinks.small;
+            else if (imgWidth <= 575)
+                newSrc = imageLinks.medium ?? imageLinks.small ?? newSrc;
+            else
+                newSrc = imageLinks.large ?? imageLinks.medium ?? imageLinks.small ?? newSrc;
+        }
 
         setTemp(newSrc);
     }
@@ -27,8 +33,8 @@ export default React.memo(function Cover({ title, className, imageLinks = {}, ..
 
     function onTmpLoad() {
         // if tmp size > img size then replace
-        tmpRef.current.height > imgRef.current.height &&
-            tmpRef.current.width > imgRef.current.width &&
+        tmpRef.current.height > 0 &&
+            tmpRef.current.width > 0 &&
             setSrc(temp);
     }
     
@@ -55,7 +61,7 @@ export default React.memo(function Cover({ title, className, imageLinks = {}, ..
     return (
         <>
             <img ref={tmpRef} style={{ display: 'none' }} src={temp} alt='' onLoad={onTmpLoad} />
-            <img className={className} ref={imgRef} data-role="cover" src={src} title={title} alt="Frontcover" />
+            <img className={className + ' ' + styles.image} ref={imgRef} data-role="cover" src={src} title={title} alt="Frontcover" />
         </>
     );
 });

@@ -11,15 +11,13 @@ import SnackbarActions from '../../SnackbarActions';
 
 
 async function updateState(volumeID, state) {
-    let res = null;
     try {
-        if (state) res = await gapi.addToMyToRead(volumeID);
-        else res = await gapi.removeFromMyToRead(volumeID);
+        return state
+            ? await gapi.addToMyToRead(volumeID)
+            : await gapi.removeFromMyToRead(volumeID);
     } catch (err) {
         throw err;
     }
-    // then
-    return res;
 }
 
 export default function ToReadButton(props) {

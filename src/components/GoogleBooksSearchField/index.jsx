@@ -10,6 +10,7 @@ import _ from "lodash";
 import { InputAdornment, TextField } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import SearchRoundedIcon from "@material-ui/icons/SearchRounded";
+import base_path from "../../helpers/base_path";
 
 /**
  * @param {Boolean} state
@@ -23,7 +24,7 @@ const setPageScrollOnMobileScreenTo = (state) => {
 };
 
 const GoogleBooksSearchField = React.memo((props) => {
-  const { urlQueryString, setQuery, placeholder } = props;
+  const { urlQueryString, setQuery, placeholder, className } = props;
   const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -39,7 +40,7 @@ const GoogleBooksSearchField = React.memo((props) => {
       // send query to the search page, even if it's already in the search page.
       // this will create a new history session and the user can go back to the previous query
       let encodedQuery = encodeURI(_.replace(inputValue, /[\s]+/g, "+"));
-      history.push(`/search?q=${encodedQuery}`);
+      history.push(base_path + `/search?q=${encodedQuery}`);
       if (location.pathname === "/search") {
         typeof setQuery === "function" && setQuery(inputValue); // setQuery is a parent state
       }
@@ -95,7 +96,6 @@ const GoogleBooksSearchField = React.memo((props) => {
   }, []);
 
   useEffect(() => {
-    console.log("urlSearchQuery", urlQueryString);
     urlQueryString !== inputValue && setInputValueTo(urlQueryString);
   }, [urlQueryString]);
 
@@ -109,16 +109,14 @@ const GoogleBooksSearchField = React.memo((props) => {
     isUserSubmit && submit();
   }, [isUserSubmit]);
 
-    useEffect(() => {
-        console.log("inputValue", inputValue);
-    }, [inputValue]);
 
 
   return (
     <form
-      className={styles.form}
+      className={styles.form+(className?' '+className:'')}
       onSubmit={(e) => {
         e.preventDefault();
+        console.log('submit', isUserSubmit);
         setIsUserSubmitTo(true);
       }}
     >
@@ -127,7 +125,6 @@ const GoogleBooksSearchField = React.memo((props) => {
           <Autocomplete
             api={api}
             setIsUserSubmitTo={setIsUserSubmitTo}
-            setIsUserSubmit={setIsUserSubmitTo}
             onInputFocus={onInputFocus}
             onInputBlur={onInputBlur}
             setInputValueTo={setInputValueTo}

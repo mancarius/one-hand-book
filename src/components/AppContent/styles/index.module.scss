@@ -1,5 +1,4 @@
 .container {
-    padding: .5em;
     position: relative;
     flex:1;
     display: flex;
@@ -8,4 +7,8 @@
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
+
+    &>*{
+        padding: 0 .5em;
+    }
 }

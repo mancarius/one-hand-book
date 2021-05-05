@@ -81,7 +81,7 @@ export default React.forwardRef((props, inputRef) => {
   }, [inputValue, open]);
 
   useEffect(() => {
-    setIsUserSubmitTo(true);
+    Boolean(value) && setIsUserSubmitTo(true);
   }, [value]);
 
   // clear autocomplete options on field blur

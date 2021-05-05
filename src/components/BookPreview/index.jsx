@@ -4,9 +4,15 @@ import _ from "lodash";
 import Cover from "../Book/Cover";
 import Price from "../Book/Price";
 import { Rating } from "@material-ui/lab";
+import base_path from "../../helpers/base_path";
 
-const formatTitle = (str) =>
-  encodeURI(_.replace(str, /[\s]+/g, "-")).toLowerCase();
+
+const formatTitle = (str) => {
+  // remove #
+  const strWithoutHash = str.replace('#', '');
+  const kebabCaseStr = _.kebabCase(strWithoutHash).toLowerCase();
+  return encodeURI(kebabCaseStr);
+}
 
 export default function Item(props) {
   const {
@@ -22,7 +28,7 @@ export default function Item(props) {
     saleInfo,
   } = props;
   const history = useHistory();
-  const link = `/book/${formatTitle(title)}?volumeID=${id}`;
+  const link = base_path + `/book/${formatTitle(title)}?volumeID=${id}`;
   const classes =
     styles.item +
     (column ? ` ${styles.column}` : "") +

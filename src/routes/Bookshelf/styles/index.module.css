@@ -1,8 +1,36 @@
+.title {
+  margin-bottom: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+@media only screen and (max-width: 400px) {
+  .title {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
 .grid_container {
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: (minmax(300px, 1fr))[auto-fill];
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
+}
+
+@media only screen and (min-width: 400px) {
+  .grid_container {
+    gap: 2rem;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .grid_container {
+    gap: 1rem;
+  }
 }
 /*# sourceMappingURL=index.module.css.map */

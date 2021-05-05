@@ -1,15 +1,28 @@
 .footer {
-  margin-top: auto;
+  margin-top: 2rem;
   margin-bottom: 0;
-  padding: 1em .5em;
+  padding: 1.5em .5em;
   border-color: #eee;
   border-width: 1px;
   border-top-style: solid;
-  background-color: #eee;
-  display: none;
+  background-color: #fafafa;
 }
 
-.logo {
-  font-size: 1em;
+.footer .logo {
+  font-size: 1.5em;
+  font-weight: normal;
+  text-align: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer .logo small {
+  font-size: x-small;
+}
+
+.footer p {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: small;
 }
 /*# sourceMappingURL=index.module.css.map */

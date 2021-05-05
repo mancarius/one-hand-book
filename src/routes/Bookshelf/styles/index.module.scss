@@ -1,9 +1,33 @@
+@import '../../../styles/globals';
+
+.title {
+    margin: {
+        bottom: 2rem;
+    }
+    padding: {
+        top: 1rem;
+        bottom: 1rem;
+    };
+    position: sticky;
+    top: 0;
+    z-index: 10;
+
+    @media only screen and (max-width: $media-query-sx) {
+        padding: {
+            left: 1rem;
+            right: 1rem;
+        }
+    }
+}
+
 .grid_container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+
     @media only screen and (min-width: $media-query-sx) {
         gap: 2rem;
     }
+
     @media only screen and (max-width: $media-query-sx) {
         gap: 1rem;
     }

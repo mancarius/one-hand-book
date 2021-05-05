@@ -1,0 +1,18 @@
+@import '../../../styles/globals';
+
+.floating {
+    position: fixed;
+    bottom: 1rem;
+    z-index: 10;
+    padding: 0;
+    width: fit-content;
+
+    @media only screen and (max-width: $media-query-md) {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    @media only screen and (min-width: $media-query-md) {
+        right:1rem;
+    }
+}

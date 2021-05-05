@@ -1,0 +1,30 @@
+@import '../../../../styles/globals';
+
+.buttonContainer {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding-top: 2rem;
+    background: linear-gradient(0deg, var(--main-bg-color) 50%, transparent 100%);
+    position: sticky;
+
+    @media only screen and (min-width: $media-query-sx) {
+        bottom: 0;
+    }
+
+    @media only screen and (max-width: $media-query-sx) {
+        bottom: 2.5rem;
+    }
+
+    z-index: 2;
+    margin-top: -2.5rem;
+}
+
+.synopsis-window {
+    overflow: hidden;
+    max-height: 6em;
+    text-overflow: ellipsis;
+    transition: 400ms ease;
+    margin: 0;
+    line-height: 1.5em;
+}

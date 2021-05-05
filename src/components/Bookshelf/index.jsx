@@ -6,10 +6,12 @@ import gapi from '../../helpers/googleBooksApi'
 import PreviewsContainer from '../BookPreviewsContainer'
 import styles from './styles/index.module.css'
 import RenderCarousel from '../Carousel/Render';
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 
 
-const Bookshelf = ({ component = <></>, carousel, grid, fallback, oneRowGrid, ...props }) => {
+const Bookshelf = (props) => {
+    const { component = <></>, carousel, grid, fallback } = props;
     const errorsHandler = useErrorsHandler();
     let isSubscribed = useRef(false);
     const options = useRef({
@@ -37,7 +39,7 @@ const Bookshelf = ({ component = <></>, carousel, grid, fallback, oneRowGrid, ..
                 isSubscribed.current && errorsHandler(err);
             })
             .finally(() => {
-                setLoading(false);
+                isSubscribed.current && setLoading(false);
             });
 
         return(() => {
@@ -54,27 +56,21 @@ const Bookshelf = ({ component = <></>, carousel, grid, fallback, oneRowGrid, ..
     }, [dispatch, loading]);
 
 
-    return (
-        loading
-            ?
-            <></>
-            :
-            volumes.length
-                ?
-                carousel
-                    ?
-                    <RenderCarousel {...props}> { volumes } </RenderCarousel>
-                    :
-                    grid
-                        ?
-                        <PreviewsContainer { ...props }>
-                            {volumes}
-                        </PreviewsContainer>
-                        :
-                        volumes
-                :
-                <div className={styles.fallback}>{fallback}</div>
-    )
+    return loading ? (
+      <>
+        <CircularProgress />
+      </>
+    ) : volumes.length ? (
+      carousel ? (
+        <RenderCarousel {...props}> {volumes} </RenderCarousel>
+      ) : grid ? (
+            <PreviewsContainer {...props}>{volumes}</PreviewsContainer>
+        ) : (
+            volumes
+        )
+    ) : (
+      <div className={styles.fallback}>{fallback}</div>
+    );
 }
 
 

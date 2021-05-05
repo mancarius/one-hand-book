@@ -1,11 +1,11 @@
 .bookshelves_container {
   position: relative;
-  background-color: var(--lightgray);
-  padding: 1rem;
-  border-top-left-radius: 2rem;
-  border-top-right-radius: 2rem;
-  -webkit-box-shadow: 0px 0px 5px -2px #33333382;
-          box-shadow: 0px 0px 5px -2px #33333382;
+  background-color: #f9f9f9;
+  padding-bottom: 3rem;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  -webkit-box-shadow: 0px 0px 5px -2px #33333352;
+          box-shadow: 0px 0px 5px -2px #33333352;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -18,17 +18,45 @@
 @media only screen and (max-width: 400px) {
   .bookshelves_container {
     margin: 1rem -.5rem;
+    padding: 1rem;
   }
 }
 
 @media only screen and (min-width: 400px) {
   .bookshelves_container {
-    margin: 1rem;
+    margin: 1rem 0;
+    padding: 1.5rem;
   }
 }
 
 .main_carousel {
-  margin: 2rem -.5rem 4rem;
+  margin: 3rem -.5rem 4rem !important;
+  display: block !important;
+  position: relative;
+}
+
+.main_carousel::before {
+  content: ' ';
+  position: absolute;
+  background: -webkit-gradient(linear, left top, right top, color-stop(10%, var(--main-bg-color)), to(transparent));
+  background: linear-gradient(90deg, var(--main-bg-color) 10%, transparent 100%);
+  top: 0;
+  left: .5rem;
+  bottom: 0;
+  z-index: 10;
+  width: 2rem;
+}
+
+.main_carousel::after {
+  content: ' ';
+  position: absolute;
+  background: -webkit-gradient(linear, right top, left top, color-stop(10%, var(--main-bg-color)), to(transparent));
+  background: linear-gradient(270deg, var(--main-bg-color) 10%, transparent 100%);
+  top: 0;
+  right: .5rem;
+  bottom: 0;
+  z-index: 10;
+  width: 2rem;
 }
 
 .main_carousel .carousel_title {
@@ -38,16 +66,51 @@
 
 .carousel_container {
   position: relative;
+  margin-top: .5rem;
   margin-bottom: 2rem;
+  scroll-behavior: smooth;
+  overflow-y: auto;
 }
 
-.carousel_container img {
-  max-height: 8rem;
+@media only screen and (min-width: 400px) {
+  .carousel_container::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .carousel_container::-webkit-scrollbar-track {
+    background: #c1c0c020;
+    border-radius: 2rem;
+  }
+  .carousel_container::-webkit-scrollbar-thumb {
+    background: #c9c9c950;
+    border-radius: 2rem;
+  }
+  .carousel_container::-webkit-scrollbar-thumb:hover {
+    background: #c9c9c9;
+  }
 }
 
-.shelves_button {
-  background-color: var(--button-success-bg) !important;
-  margin: 0 auto !important;
+.carousel_container .secondary_carousel {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.carousel_container .secondary_carousel > li {
+  width: 9rem;
+  height: auto;
+  margin: .5rem;
+}
+
+.carousel_container .secondary_carousel > li:first-of-type {
+  margin-left: 5px;
+}
+
+.carousel_container .secondary_carousel:last-of-type {
+  margin-right: 5px;
 }
 
 .logo_container {

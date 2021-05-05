@@ -1,9 +1,12 @@
-$background-color-ligth: #ffffff;
 $color-lightgray: #fbfbfb;
 $color-darkgray: #3b3b3b;
-$color-lightyellow: #ffffa5;
+$color-lightyellow: #fdfd7a;
+$color-beige: 'beige';
+
+$background-color-primary: #FFFFFF;
+$background-color-secondary: $color-beige;
 $color-button-success: $color-lightyellow;
-$color-button-default: #ff9800;
+$color-button-default: #ceceb8;
 
 $media-query-sx: 400px;
 $media-query-md: 600px;

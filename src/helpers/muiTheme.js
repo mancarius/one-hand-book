@@ -1,10 +1,7 @@
 import {
     createMuiTheme
 } from '@material-ui/core/styles';
-import styles from '../styles/index.css'
 
-const primary = styles.button_primary;
-const secondary = styles.button_secondary;
 
 const theme = createMuiTheme({
     overrides: {
@@ -19,7 +16,7 @@ const theme = createMuiTheme({
                 boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
                 letterSpacing: 'normal',
                 width: 'fit-content',
-                opacity: .8,
+                opacity: .9,
                 '&:hover': {
                     opacity: 1
                 }
@@ -28,47 +25,43 @@ const theme = createMuiTheme({
                 boxShadow: 'none',
                 color: 'inherit'
             },
-            textPrimary: {
-                ...styles.button_primary
-            },
-            textSecondary: {
-                ...styles.button_secondary
-            },
+            textPrimary: {},
+            textSecondary: {},
             outlined: {
                 boxShadow: 'none',
                 borderColor: 'inherit',
             },
             outlinedPrimary: {
-                borderColor: 'var(--button-success-bg)',
-                color: 'var(--darkgray)',
+                borderColor: 'var(--button-success-bg) !important',
+                color: 'var(--darkgray) !important',
                 '&:hover': {
-                    backgroundColor: 'transparent',
-                    borderColor: 'var(--button-success-bg)',
-                    color: 'var(--darkgray)',
+                    backgroundColor: 'var(--button-success-bg) !important',
+                    borderColor: 'var(--button-success-bg) !important',
+                    color: 'var(--darkgray) !important',
                 }
             },
             outlinedSecondary: {
-                borderColor: 'var(--button-default-bg)',
-                color: 'var(--button-default-bg)',
+                borderColor: 'var(--button-default-bg) !important',
+                color: 'var(--button-default-bg) !important',
                 '&:hover': {
-                    backgroundColor: 'transparent',
-                    borderColor: 'var(--button-default-bg)',
-                    color: 'var(--button-default-bg)',
+                    backgroundColor: 'var(--button-default-bg) !important',
+                    borderColor: 'var(--button-default-bg) !important',
+                    color: 'var(--button-default-bg) !important',
                 }
             },
             contained: {
                 color: 'var(--darkgray) !important',
             },
             containedPrimary: {
-                backgroundColor: 'var(--button-success-bg)',
+                backgroundColor: 'var(--button-success-bg) !important',
                 '&:hover': {
-                    backgroundColor: 'var(--button-success-bg)',
+                    backgroundColor: 'var(--button-success-bg) !important',
                 }
             },
             containedSecondary: {
-                backgroundColor: 'var(--button-default-bg)',
+                backgroundColor: 'var(--button-default-bg) !important',
                 '&:hover': {
-                    backgroundColor: 'var(--button-default-bg)',
+                    backgroundColor: 'var(--button-default-bg) !important',
                 }
             }
         },

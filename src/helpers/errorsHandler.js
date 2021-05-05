@@ -10,10 +10,11 @@ import {
     snackbar
 } from './SnackBarUtils';
 import SnackbarActions from '../components/SnackbarActions';
+import base_path from './base_path';
 
 
 function goToAuth() {
-    history.push('/auth', {
+    history.push(base_path+'/auth', {
         from: history.location
     });
 }

@@ -1,0 +1,24 @@
+.floating {
+  position: fixed;
+  bottom: 1rem;
+  z-index: 10;
+  padding: 0;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+@media only screen and (max-width: 600px) {
+  .floating {
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .floating {
+    right: 1rem;
+  }
+}
+/*# sourceMappingURL=index.module.css.map */

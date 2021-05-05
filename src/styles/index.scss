@@ -2,10 +2,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
 
 :root {
-    --main-bg-color: #{$background-color-ligth};
+    --main-bg-color: #{$background-color-primary};
+    --secondary-bg-color: #{$background-color-secondary};
     --lightgray: #{$color-lightgray};
     --darkgray: #{$color-darkgray};
     --lightyellow: #{$color-lightyellow};
+    --beige: #{$color-beige};
     --button-success-bg: #{$color-button-success};
     --button-default-bg: #{$color-button-default};
 }
@@ -20,8 +22,8 @@ html {
     font-family: Montserrat, sans-serif;
     padding: 0;
     margin: 0;
-    background-color: var(--main-bg-color);
     scroll-behavior: smooth;
+    background: linear-gradient(180deg, beige 5rem, transparent 20rem);
 }
 
 body {
@@ -30,12 +32,32 @@ body {
 
 #root {
     background-color: inherit;
+    overflow-x: hidden;
 
     .App {
         background-color: inherit;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
+
+        .secondary-bg-color {
+            position: relative;
+
+            &::before {
+                content: ' ';
+                background-color: var(--secondary-bg-color);
+                position: absolute;
+                z-index: -1;
+                left: -200%;
+                right: -200%;
+                top: 0;
+                bottom: 0;
+            }
+
+            &>* {
+                z-index: 1;
+            }
+        }
     }
 }
 

@@ -1,5 +1,4 @@
 .container {
-  padding: .5em;
   position: relative;
   -webkit-box-flex: 1;
       -ms-flex: 1;
@@ -15,5 +14,9 @@
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
+}
+
+.container > * {
+  padding: 0 .5em;
 }
 /*# sourceMappingURL=index.module.css.map */

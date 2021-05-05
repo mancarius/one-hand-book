@@ -1,6 +1,5 @@
 /* eslint-disable import/no-anonymous-default-export */
 import axios from "axios";
-import _ from "lodash";
 
 class IpStackError extends Error {
     constructor(code = null, ...params) {
@@ -19,13 +18,13 @@ class IpStackError extends Error {
 
 /**
  * Return a function that return a promise that return the current country code based on user ip
- * @return
+ * @return {Function}
  */
 export default function () {
     const apiKey = process.env.REACT_APP_IP_STACK_APIKEY;
     const fields = 'fields=country_code';
     const output = 'output=json';
-    // call the api only first time. other times return stored value
+    // call the api first time only. other times return stored value
     return async () => {
         // if in cache
         if (localStorage.getItem('country_code') !== null)

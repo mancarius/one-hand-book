@@ -4,12 +4,7 @@
 
     &:not(.only_cover) {
         overflow: hidden;
-        //box-shadow: 0px 0px 4px -1px #0000004d;
         display: flex;
-
-        &:not(.cover_and_desc) {
-            height: 10em;
-        }
 
         .image {
             width: 20%;
@@ -50,6 +45,17 @@
     &.column {
         display: flex;
         flex-flow: column;
+        border-radius: 3px;
+        box-shadow: 0px 1px 5px -2px #00000063;
+        transition: all .6s ease;
+
+        &:hover {
+            box-shadow: 0px 1px 8px -2px #00000063;
+        }
+
+        &>a {
+            padding: .5rem;
+        }
 
         .image {
             width: 100%;
@@ -58,6 +64,7 @@
         .info {
             padding: 0;
             margin-top: .5em;
+            margin-bottom: 1rem;
         }
 
         .title {
@@ -100,7 +107,12 @@
 }
 
 .author {
-    @extend.title
+    @extend.title;
+
+    &::after {
+        content: '.';
+        visibility: hidden;
+    }
 }
 
 .ratingContainer {
@@ -118,6 +130,8 @@
     font-weight: bolder;
     top: 0;
     bottom: 0;
+    display: flex;
+    align-items: center;
 }
 
 .price {

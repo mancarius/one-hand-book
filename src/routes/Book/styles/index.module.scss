@@ -9,6 +9,7 @@
 }
 
 .book_container {
+    margin-top: 2rem;
     margin-bottom: 2rem;
 
     @media only screen and (max-width: $media-query-sx) {
@@ -41,7 +42,6 @@
     }
 
     &>* {
-        background-color: var(--main-bg-color);
         z-index: 1;
     }
 }
@@ -88,34 +88,7 @@
     }
 }
 
-.title {
-    @media only screen and (max-width: $media-query-sx) {
-        margin-top: .8rem;
-    }
 
-    margin-bottom: 1rem;
-    font-size: 1.5em;
-    font-weight: normal;
-}
-
-.author {
-    font-weight: normal;
-    font-size: 1.1em;
-}
-
-.publishing {
-    display: flex;
-}
-
-.publisher {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.published-date {
-    white-space: nowrap;
-}
 
 .card {
     padding: 2rem 1rem;
@@ -133,23 +106,16 @@
     }
 }
 
-.review {
-    display: flex;
-    align-items: center;
 
-    &>span:last-of-type {
-        margin-left: .5em;
-    }
-}
 
 .userActionsContainer {
     grid-area: userActions;
-    background-color: var(--main-bg-color);
     display: flex;
 
     @media only screen and (max-width: $media-query-sx) {
         position: fixed;
         justify-content: space-evenly;
+        background-color: var(--main-bg-color);
         bottom: 0;
         left: 0;
         right: 0;
@@ -157,8 +123,8 @@
     }
 
     @media only screen and (min-width: $media-query-sx) {
-        border-radius: 50vw;
-        background-color: var(--lightgray);
+        padding-bottom: .5rem;
+        border-bottom: 1px solid #dfdfdf;
     }
 
     button {
@@ -195,68 +161,14 @@
 
 .synopsis {
     grid-area: synopsis;
-
-    .buttonContainer {
-        display: block;
-        width: 100%;
-        text-align: center;
-        padding-top: 2rem;
-        background: linear-gradient(0deg, var(--main-bg-color) 50%, transparent 100%);
-        position: sticky;
-        @media only screen and (min-width: $media-query-sx) {
-            bottom: 0;
-        }
-        @media only screen and (max-width: $media-query-sx) {
-            bottom: 2.5rem;
-        }
-        z-index: 2;
-        margin-top: -2.5rem;
-    }
-}
-
-.synopsis-window {
-    overflow: hidden;
-    max-height: 6em;
-    text-overflow: ellipsis;
-    transition: 400ms ease;
-    margin: 0;
-    line-height: 1.5em;
 }
 
 .bibliography {
     grid-area: bibliography;
     z-index: 2;
-
-    dl {
-        @media only screen and (min-width: $media-query-sx) {
-            display: grid;
-            grid-template-columns: auto 1fr;
-        }
-
-        dt,
-        dd {
-            margin: 0;
-
-            @media only screen and (min-width: $media-query-sx) {
-                margin-top: 1rem;
-            }
-        }
-
-        dt {
-            margin-right: 2rem;
-            white-space: nowrap;
-            font-weight: bold;
-
-            @media only screen and (max-width: $media-query-sx) {
-                margin-top: 1rem;
-                margin-bottom: .5rem;
-            }
-        }
-    }
 }
 
 .explore {
     grid-area: exploreAuthor;
-    background-color: var(--lightgray);
     margin: 0;
 }

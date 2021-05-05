@@ -1,4 +1,5 @@
 import { Button } from "@material-ui/core";
+import base_path from "../../helpers/base_path";
 import history from "../../helpers/history";
 import { closeSnackbar } from "../../helpers/SnackBarUtils";
 
@@ -8,7 +9,7 @@ SnackbarActions.SignIn = () => (
   <Button
     onClick={() => {
       closeSnackbar();
-      history.push("/auth", {
+      history.push(base_path+"/auth", {
         from: history.location,
       });
     }}

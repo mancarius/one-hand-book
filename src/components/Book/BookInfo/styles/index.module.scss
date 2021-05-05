@@ -1,0 +1,39 @@
+@import '../../../../styles/globals';
+
+.title {
+    @media only screen and (max-width: $media-query-sx) {
+        margin-top: .8rem;
+    }
+
+    margin-bottom: 1rem;
+    font-size: 1.5em;
+    font-weight: normal;
+}
+
+.author {
+    font-weight: normal;
+    font-size: 1.1em;
+}
+
+.publishing {
+    display: flex;
+}
+
+.publisher {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.published-date {
+    white-space: nowrap;
+}
+
+.review {
+    display: flex;
+    align-items: center;
+
+    &>span:last-of-type {
+        margin-left: .5em;
+    }
+}

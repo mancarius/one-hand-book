@@ -11,7 +11,7 @@ import Popover from '@material-ui/core/Popover';
 import IconButton from '@material-ui/core/IconButton';
 import UserAvatar from '../../UserAvatar';
 import UserNav from '../../UserNav';
-
+import base_path from '../../../helpers/base_path';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -58,18 +58,8 @@ const AppNav = () => {
         <><nav className={styles.nav}>
             <ul className={styles.items}>
                 { /// HOME
-                    <li className={styles.item + (nav.activeItem === 'home' ? styles.active : '')}>
-                        <Link to="/" title="Home">
-                            <Avatar variant="square" className={classes.small}>
-                                <HomeTwoTone />
-                            </Avatar>
-                            <span className={styles.label}>Home</span>
-                        </Link>
-                    </li>
-                }
-                { /// SEARCH
                     <li className={styles.item + (nav.activeItem === 'search' ? styles.active : '')}>
-                        <Link to="/search" title="Search a book" >
+                        <Link to={base_path + ""} title="Search a book" >
                             <Avatar variant="square" className={classes.small}>
                                 <SearchTwoTone />
                             </Avatar>
@@ -78,18 +68,18 @@ const AppNav = () => {
                     </li>
                 }
                 { /// MY BOOKSHELVES
-                    <li className={styles.item + (nav.activeItem === 'bookshelves' ? styles.active : '')}>
-                        <Link to="/my-bookshelves" title="My Bookshelves">
+                    <li className={styles.item + (nav.activeItem === 'library' ? styles.active : '')}>
+                        <Link to={base_path + "/my-library"} title="My Library">
                             <Avatar variant="square" className={classes.small}>
                                 <BookTwoTone />
                             </Avatar>
-                            <span className={styles.label}>My Bookshelves</span>
+                            <span className={styles.label}>My Library</span>
                         </Link>
                     </li>
                 }
                 { /// AUTH
                     <li className={styles.item + (nav.activeItem === 'account' ? styles.active : '')}>
-                        <IconButton aria-describedby={id} variant="contained" color="primary" onClick={handleClick}>
+                        <IconButton aria-describedby={id} variant="contained" onClick={handleClick}>
                             <UserAvatar className={classes.small} />
                         </IconButton>
                     </li>

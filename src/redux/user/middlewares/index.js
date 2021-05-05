@@ -1,7 +1,9 @@
 import user from '../actions'
 import firebase from '../../../helpers/firebase'
 import actions from '../../actions'
-import { errorsHandler } from '../../../helpers/errorsHandler'
+import {
+    errorsHandler
+} from '../../../helpers/errorsHandler'
 
 /**
  * return action if logout success, else display error
@@ -17,11 +19,11 @@ export const logoutMiddleware = store => next => action => {
     store.dispatch(actions.document.loading.start());
     // signout from firebase
     firebase.signOut().then(() => {
-        // Sign-out successful.
-        // then go to reducer
-        return next(action);
-    }).catch((error) => {
-        // An error happened.
-        errorsHandler(error);
-    }).finally(store.dispatch(actions.document.loading.stop()));
+            // Sign-out successful.
+            localStorage.removeItem('user');
+            // then go to reducer
+            return next(action);
+        })
+        .catch(errorsHandler)
+        .finally(store.dispatch(actions.document.loading.stop()));
 }

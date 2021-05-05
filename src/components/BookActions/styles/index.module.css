@@ -4,7 +4,6 @@
   display: flex;
   -ms-flex-pack: distribute;
       justify-content: space-around;
-  background-color: #fbfbfb;
   border-radius: 3rem;
   font-size: small;
   color: #777;

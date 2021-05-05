@@ -166,8 +166,10 @@ export default {
         // else continue with default handle
         if (error.response) {
             // Request made and server responded
-            if (error.response.status === 401)
+            if (error.response.status === 401) {
+                this.abort();
                 throw new this._AuthorizationError(error.response.data.error.message);
+            }
         } else if (error.request) {
             // The request was made but no response was received
             console.warn(error.request);
@@ -222,7 +224,7 @@ export default {
             return customRes;
         } catch (error) {
             if (axios.isCancel(error))
-                throw new Error(`Request canceled ${error.message ?? ''}`);
+                throw new Error(`Request canceled: ${error.message ?? ''}`);
             else if (error.name === 'SyntaxError')
                 console.warn(error)
             else throw error
@@ -332,13 +334,12 @@ export default {
             return Promise.allSettled([get_volume])
                 .then(([volume]) => {
                     if (volume.status === 'fulfilled') {
-                        return volume.value;
+                        return volume.value ?? [];
                     } else {
                         throw volume.reason;
                     } 
                 })
                 .catch(err => {
-                    console.log(err);
                     throw err;
                 });
         } catch (error) {
@@ -452,6 +453,9 @@ export default {
                 params,
                 fields
             });
+
+            if (!Boolean(res.items?.length)) return [];
+            // else
             // return formatted array of object
             res = res.items.map(o => {
 
@@ -686,7 +690,7 @@ export default {
      * @param {String} volumeID
      * @returns 
      */
-    async removeFromToMyToRead(volumeID) {
+    async removeFromMyToRead(volumeID) {
         const shelfID = 2;
 
         try {

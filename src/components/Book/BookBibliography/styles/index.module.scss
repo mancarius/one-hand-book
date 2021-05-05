@@ -1,0 +1,28 @@
+@import '../../../../styles/globals';
+
+.list_group {
+    @media only screen and (min-width: $media-query-sx) {
+        display: grid;
+        grid-template-columns: auto 1fr;
+    }
+
+    dt,
+    dd {
+        margin: 0;
+
+        @media only screen and (min-width: $media-query-sx) {
+            margin-top: 1rem;
+        }
+    }
+
+    dt {
+        margin-right: 2rem;
+        white-space: nowrap;
+        font-weight: bold;
+
+        @media only screen and (max-width: $media-query-sx) {
+            margin-top: 1rem;
+            margin-bottom: .5rem;
+        }
+    }
+}

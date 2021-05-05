@@ -63,7 +63,7 @@
   margin-left: .5em;
 }
 
-@media only screen and (max-width: 1200px) {
+@media only screen and (max-width: 600px) {
   .item .label {
     display: none;
   }

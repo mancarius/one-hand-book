@@ -1,4 +1,12 @@
-.search-field-container {
+.search_field_background {
+    position: absolute !important;
+    top: 0;
+    width: 100%;
+    z-index: 0;
+    height: 6.5rem;
+}
+
+.search_field_container {
     margin: 0;
     height: 100%;
     position: sticky;
@@ -7,13 +15,5 @@
 }
 
 .subtitle {
-    padding: 1em 0;
-}
-
-.floating_action {
-    position: fixed;
-    bottom: 1rem;
-    right: 50%;
-    transform: translateX(50%);
-    z-index: 10;
+    padding: 1.5em 1rem 3rem;
 }
