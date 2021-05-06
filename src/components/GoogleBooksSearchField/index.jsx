@@ -116,7 +116,6 @@ const GoogleBooksSearchField = React.memo((props) => {
       className={styles.form+(className?' '+className:'')}
       onSubmit={(e) => {
         e.preventDefault();
-        console.log('submit', isUserSubmit);
         setIsUserSubmitTo(true);
       }}
     >

@@ -7,6 +7,7 @@ import { IconButton } from "@material-ui/core";
 import GoogleBooksSearchField from "../../components/GoogleBooksSearchField";
 import SearchResults from "../../components/SearchResults";
 import GoToTopButton from "../../components/GoToTopButton";
+import { useLocation } from "react-router";
 
 function useUrlParams(key) {
   const urlParams = new URLSearchParams(window.location.search);
@@ -16,7 +17,13 @@ function useUrlParams(key) {
 const SearchPage = React.memo(() => {
   let queryParams = useUrlParams;
   const dispatch = useDispatch();
+  const location = useLocation();
   const [query, setQuery] = useState(queryParams("q"));
+
+  function refreshQueryByUrlParams() {
+    const urlQuery = queryParams("q");
+    urlQuery !== query && setQuery(urlQuery);
+  }
 
   useEffect(() => {
     // set page header
@@ -24,13 +31,16 @@ const SearchPage = React.memo(() => {
     dispatch(action.document.header.set.title("Search"));
     dispatch(action.document.nav.set.activeItem("search"));
 
-    const urlQuery = queryParams("q");
-    urlQuery !== query && setQuery(urlQuery);
+    refreshQueryByUrlParams();
   }, []);
 
   useEffect(() => {
     Boolean(query) && dispatch(action.document.title.set(query));
   }, [query]);
+
+  useEffect(() => {
+    refreshQueryByUrlParams();
+  }, [location]);
 
   return (
     <>
