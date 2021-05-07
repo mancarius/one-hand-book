@@ -10,7 +10,12 @@ import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from './helpers/muiTheme'
 import { SnackbarUtilsConfigurator } from './helpers/SnackBarUtils';
+import { errorsHandler } from './helpers/errorsHandler';
 
+
+window.onerror = function (message, source, lineno, colno, error) {
+  errorsHandler(error, true);
+}
 
 
 ReactDOM.render(

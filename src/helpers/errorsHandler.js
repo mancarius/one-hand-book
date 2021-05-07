@@ -54,7 +54,7 @@ function googleApi({
 
 
 
-export function errorsHandler(error) {
+export function errorsHandler(error, silent = false) {
     // if error si null
     if (error === null) return undefined;
     // else
@@ -64,7 +64,7 @@ export function errorsHandler(error) {
         googleApi(error.response.data.error, snackbar);
     }
     // else
-    else {
+    else if(!silent) {
         if (error instanceof TypeError || error instanceof SyntaxError) {
             snackbar(
                 "Sorry mate, i can't complete this task because my developer is an ass...", {
@@ -81,31 +81,31 @@ export function errorsHandler(error) {
                             <SnackbarActions.SignIn />
                         </>
                     )}
-                );
-            }
-            else {
-                snackbar(
-                    error?.message ?? 'Something goes wrong', {
-                        variant: 'error',
-                    }
-                );
-            }
+            );
+        }
+        else {
+            snackbar(
+                error?.message ?? 'Something goes wrong', {
+                    variant: 'error',
+                }
+            );
         }
     }
+}
 
 
-    /**
-     * 
-     * @param {*} err Error 
-     * @returns 
-     */
-    export default function useErrorsHandler(err) {
-        const [error, setError] = useState(null);
+/**
+ * 
+ * @param {*} err Error 
+ * @returns 
+ */
+export default function useErrorsHandler(err) {
+    const [error, setError] = useState(null);
 
-        useEffect(() => {
-            errorsHandler(error);
-        }, [error]);
+    useEffect(() => {
+        errorsHandler(error);
+    }, [error]);
 
-        return setError;
+    return setError;
 
-    }
+}
